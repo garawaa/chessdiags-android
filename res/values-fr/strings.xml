@@ -10,7 +10,7 @@
     <string name="delete">Supprimer</string>
     <string name="yes">oui</string>
     <string name="no">non</string>
-    <string name="loadingchessengine">Chargement de l'ordinateur …</string>
+    <string name="loadingchessengine">Chargement de l\\'ordinateur …</string>
     <string name="ok">ok</string>
     <string name="error">erreur</string>
     <string name="update">mise à jour</string>
