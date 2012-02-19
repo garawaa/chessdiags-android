@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">ChessDiags</string>
+    <string name="settings">Options</string>
+    <string name="welcometitle">Bienvenue !</string>
+    <string name="welcome">Bievenue sur ChessDiags !\n\n Lors du premier lancement, il est nécessaire de télécharger les problèmes. Cela ne devrait pas prendre plus de 10 secondes.\n\n Veuillez patienter...</string>
+    <string name="updating">Mise à jour …</string>
+    <string name="uploading">Upload …</string>
+    <string name="delete">Supprimer</string>
+    <string name="yes">oui</string>
+    <string name="no">non</string>
+    <string name="loadingchessengine">Chargement de l'ordinateur …</string>
+    <string name="ok">ok</string>
+    <string name="error">erreur</string>
+    <string name="update">mise à jour</string>
+    <string name="invalidurl">adresse invalide</string>
+    <string name="cancel">annuler</string>
+    <string name="addsource">Ajouter une source</string>
+    <string name="wantmore">Plus de sources !</string>
+    <string name="browserepositories">Consulter la liste des sources</string>
+    <string name="createyourownsource">Créez votre propre source !</string>
+    <string name="apidetails">Explication de l\'API</string>
+    <string name="aboutmessage">À propos</string>
+    <string name="newsource">Nouvelle source</string>
+    <string name="add">ajouter</string>
+    <string name="movesleft">coup(s) restant(s)</string>
+    <string name="congratulations">Bravo !</string>
+    <string name="thanks">Merci</string>
+    <string name="fail">Raté :()</string>
+    <string name="tryagain">Réessayer</string>
+    <string name="positioninvalide">Position invalide</string>
+    <string name="youmustsaveproblemfirst">Vous devez enregistrer le diagramme d'abord</string>
+    <string name="norepositoryfound">Aucune source trouvée</string>
+    <string name="uploadto">Envoyé sur :</string>
+    <string name="problemsaved">Problème sauvegardé</string>
+    <string name="savecreation">Sauvegarder</string>
+    <string name="save">sauvegarder</string>
+    <string name="uploadnotsupported">Upload non supporté</string>
+    <string name="invalidresponse">réponse invalide</string>
+    <string name="problemalreadysubmitted">problème déjà soumis</string>
+    <string name="problemrefused">problème refusé</string>
+    <string name="matein">Mat en %d coups</string>
+    <string name="sourcesuccesfullyadded">Source %s ajoutée</string>
+    <string name="failedtoaddsource">Echec de l\'ajout de %s</string>
+    <string name="name"> Nom : </string>
+    <string name="unamedproblem">Problème sans nom</string>
+    <string name="whitetoplay">Trait aux blancs</string>
+    <string name="movestomate"> Coups à jouer :</string>
+    <string name="description"> Description :</string>
+    <string name="mynewproblem">Mon nouveau diagramme !</string>
+    <string name="active">Actif</string>
+    <string name="url">  URL : </string>
+    <string name="http">http://</string>
+    
+    <string name="sources">Sources</string>
+    <string name="managesources">Gérer les sources</string>
+    <string name="aboutcategory">À propos</string>
+    <string name="donate">Faire un don</string>
+    <string name="thankthedev">Remercier le développeur</string>
+    <string name="abouttitle">A propos de Chessdiags</string>
+    <string name="inappnotsupported">Les achats in-app ne sont pas supportés sur ce portable</string>
+    <string name="thanksforsupport">Merci pour votre aide !</string>
+    <string name="loading">Chargement ...</string>
+    <string name="yourcreations">Vos créations</string>
+    <string name="beginnerrepo">Problèmes faciles</string>
+    <string name="wtharvey">Problèmes de wtharvey.com</string>
+    <string name="publicrepo">Problèmes de chessdiags.com</string>
+    <string name="nextproblem">Problème suivant</string>
+    <string name="nextproblemnotfound">Plus de problèmes dans cette catégorie</string>
+    <string name="invalidfen">Erreur : position invalide</string>
+    <string name="emptycreationsmessage">Liste des problèmes que vous avez créés. Pour naviguer entre les catégories de problèmes, faites glisser avec votre doigt.</string>
+
+          <string name="sending">Envoi ...</string>   
+</resources>

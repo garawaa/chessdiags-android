@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">ChessDiags</string>
+    <string name="settings">Settings</string>
+    <string name="welcometitle">Welcome !</string>
+    <string name="welcome">Welcome to ChessDiags !\n\n Since it\'s the first launch, the app has to download problems, it should only take about 10 seconds.</string>
+    <string name="updating">Updating …</string>
+    <string name="uploading">Uploading …</string>
+    <string name="delete">Delete</string>
+    <string name="yes">yes</string>
+    <string name="no">no</string>
+    <string name="loadingchessengine">Loading chess engine …</string>
+    <string name="ok">ok</string>
+    <string name="error">error</string>
+    <string name="update">update</string>
+    <string name="invalidurl">invalid url</string>
+    <string name="cancel">cancel</string>
+    <string name="addsource">Add a source</string>
+    <string name="wantmore">Want more ?</string>
+    <string name="browserepositories">Browse the repositories list</string>
+    <string name="createyourownsource">Create your own source !</string>
+    <string name="apidetails">API details</string>
+    <string name="newsource">New source</string>
+    <string name="add">add</string>
+    <string name="movesleft">move(s) left</string>
+    <string name="congratulations">Congratulations !</string>
+    <string name="thanks">Thanks</string>
+    <string name="fail">Fail :(</string>
+    <string name="tryagain">Try again</string>
+    <string name="positioninvalide">Invalid position</string>
+    <string name="youmustsaveproblemfirst">You must save the problem first</string>
+    <string name="norepositoryfound">No repository found</string>
+    <string name="uploadto">Upload to :</string>
+    <string name="problemsaved">Problem saved</string>
+    <string name="savecreation">Save creation</string>
+    <string name="save">save</string>
+    <string name="uploadnotsupported">Upload not supported</string>
+    <string name="invalidresponse">invalid response</string>
+    <string name="problemalreadysubmitted">problem already submitted</string>
+    <string name="problemrefused">problem refused</string>
+    <string name="matein">Mate in %d moves</string>
+    <string name="sourcesuccesfullyadded">Source %s succesfully added</string>
+    <string name="failedtoaddsource">Failed to add source : %s</string>
+    <string name="invalidurloralreadyadded">This url is invalid or already present</string>
+    <string name="name"> Name : </string>
+    <string name="unamedproblem">Unamed problem</string>
+    <string name="whitetoplay">White to play</string>
+    <string name="movestomate"> Moves to mate :</string>
+    <string name="description"> Description :</string>
+    <string name="mynewproblem">My new problem !</string>
+    <string name="active">Active</string>
+    <string name="url">  URL : </string>
+    <string name="http">http://</string>
+    
+    <string name="sources">Sources</string>
+    <string name="managesources">Manage sources</string>
+    <string name="aboutcategory">About</string>
+    <string name="donate">Donate</string>
+    <string name="thankthedev">Thank the dev</string>
+    <string name="abouttitle">About Chessdiags</string>
+    <string name="inappnotsupported">In-app not supported on this device</string>
+    <string name="thanksforsupport">Thanks for your support !</string>
+    <string name="loading">Loading ...</string>
+    <string name="yourcreations">Your creations</string>
+     <string name="beginnerrepo">Beginner repository</string>
+    <string name="wtharvey">Wtharvey puzzles repository</string>
+    <string name="publicrepo">Chessdiags.com public repository</string>
+    <string name="nextproblem">Next problem</string>
+    <string name="nextproblemnotfound">No more problems on this repository</string>
+    <string name="invalidfen">Error : invalid position</string>
+    <string name="emptycreationsmessage">Here is the list of the problems you have created. To switch between problem repositories, swype with your finger.</string>
+
+     <string name="sending">Sending ...</string>   
+</resources>
