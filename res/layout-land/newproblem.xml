@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="horizontal" android:layout_width="fill_parent"
+	android:layout_height="fill_parent" android:id="@+id/layoutPartieActivity">
+	<widgets.Board android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:id="@+id/board"
+		android:layout_weight="1" android:width="0dip" android:height="0dip">
+	</widgets.Board>
+	<widgets.Pieces
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:id="@+id/pieces" android:layout_weight="100" android:width="0dip"
+		android:height="0dip">
+	</widgets.Pieces>
+	
+
+
+</LinearLayout>

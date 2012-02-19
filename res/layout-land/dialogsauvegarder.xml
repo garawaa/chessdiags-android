@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView >
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/zoneAddSource"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=" Name : " >
+            </TextView>
+
+            <EditText
+                android:id="@+id/nom"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:inputType="textCapSentences"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="Unamed problem" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" Moves to mate :" >
+            </TextView>
+
+            <Button
+                android:id="@+id/boutonmoins"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="  -  " >
+            </Button>
+
+            <EditText
+                android:id="@+id/nbCoups"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:maxLength="3"
+                android:text="2" >
+            </EditText>
+
+            <Button
+                android:id="@+id/boutonplus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="  +  " >
+            </Button>
+
+            <CheckBox
+                android:id="@+id/trait"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="White to play" >
+            </CheckBox>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/Button01"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=" Description : " >
+            </TextView>
+
+            <EditText
+                android:id="@+id/description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:inputType="textCapSentences"
+                android:text="My new problem !" />
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>
