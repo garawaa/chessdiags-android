@@ -41,17 +41,6 @@
         </TextView>
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/trait"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="100"
-        android:gravity="center"
-        android:height="0dip"
-        android:src="@drawable/p2"
-        android:width="0dip" >
-    </ImageView>
-
     <widgets.Board
         android:id="@+id/board"
         android:layout_width="fill_parent"

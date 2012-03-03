@@ -44,7 +44,6 @@ public class Diagramme extends GDActivity implements OnClickListener,  OnMenuIte
 	private Board board = null;
 	private TextView description;
 	private TextView movesLeft;
-	private ImageView trait;
 	private Partie partie = null;
 	private int caseChoisie = -1;
 	private Problem problem;
@@ -116,7 +115,6 @@ public class Diagramme extends GDActivity implements OnClickListener,  OnMenuIte
 		
 
 		movesLeft = (TextView) this.findViewById(R.id.nbmoves);
-		trait = (ImageView) this.findViewById(R.id.trait);
 
 		gLib = GestureLibraries.fromRawResource(this, R.raw.gestures);
 		gLib.load();
@@ -133,8 +131,6 @@ public class Diagramme extends GDActivity implements OnClickListener,  OnMenuIte
 		this.setTitle(problem.getNom());
 		movesLeft.setText(partie.getNbMovesLeft()+" "+getString(R.string.movesleft));
 		description.setText(problem.getDescription());
-		if (partie.getTrait())  trait.setImageResource(R.drawable.p6);
-		else trait.setImageResource(R.drawable.p12);
 	}
 
 	@Override

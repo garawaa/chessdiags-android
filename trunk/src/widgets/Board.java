@@ -12,6 +12,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import chesspresso.Chess;
 import chesspresso.position.Position;
 import core.Partie;
 
@@ -109,7 +110,7 @@ public class Board extends View implements OnTouchListener {
 			int piece = conversion[pos.getPiece(Partie.conversionCase(i))];
 			if (piece == 0) continue;
 			int couleur = pos.getColor(Partie.conversionCase(i));
-			dessinCase(canvas,piece + couleur * 6,(i%8) * tailleCase,((int) (i/taille)) * tailleCase,tailleCase,i==highLight);
+			dessinCase(canvas,piece + couleur * 6,getPosition(i)[0],getPosition(i)[1],tailleCase,i==highLight);
 		} 
 	}
 
@@ -118,12 +119,15 @@ public class Board extends View implements OnTouchListener {
 	}
 
 	public float[] getPosition(int i,boolean center) {
-		float taille = 8;
-		float tailleCase = getWidth() / 8;
+		int taille = 8;
+		float tailleCase = Math.min(getWidth(), getHeight()) / 8.0f;
+		int x = (i%taille);
+		int y = ((int) (i/taille));
+		if (isInverse()) y = 7 - y;
 		if (center) {
-			return new float[] {(i%taille) * tailleCase + tailleCase / 2,((int) (i/taille)) * tailleCase + tailleCase /2};
+			return new float[] {x * tailleCase + tailleCase / 2,y * tailleCase + tailleCase /2};
 		}
-		else return new float[] {(i%taille) * tailleCase,((int) (i/taille)) * tailleCase};
+		else return new float[] {x * tailleCase,y * tailleCase};
 	}
 
 	public void majBoard() {
@@ -142,6 +146,7 @@ public class Board extends View implements OnTouchListener {
 		float y = event.getY();
 		int caseX = (int) (x / v.getWidth() * 8);
 		int caseY = (int) (y / v.getHeight() * 8);
+		if (isInverse()) caseY = 7 - caseY;
 		int numCase = caseX + caseY * 8;
 		broadcastCaseClickee(numCase);
 		return false;
@@ -164,6 +169,9 @@ public class Board extends View implements OnTouchListener {
 		dessinCase(canvas,piece,offsetx,offsety,tailleCase,false);
 	}
 
+	public boolean isInverse() {
+		return partie.getCouleurDefendue() != Chess.WHITE;
+	}
 	
 	
 	

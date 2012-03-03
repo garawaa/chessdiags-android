@@ -1,6 +1,5 @@
 package com.estragon.chessdiags2;
 
-import com.estragon.chessdiags2.R;
 
 public class Coup {
 	public int depart;
