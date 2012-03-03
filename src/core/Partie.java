@@ -296,6 +296,10 @@ public class Partie implements  AnalyseListener {
 	public static int staticCastlesAnalysis(String fen) {
 		return staticCastlesAnalysis(new Position(fen));
 	}
+	
+	public int getCouleurDefendue() {
+		return couleurDefendue;
+	}
 
 
 }

@@ -168,7 +168,12 @@ public class TestActivity extends GDActivity implements OnPageChangeListener, On
 				Engine.waitForLoad();
 				runOnUiThread(new Runnable() {
 					public void run() {
-						dismissDialog(DIALOG_LOADING);
+						try {
+							dismissDialog(DIALOG_LOADING);
+						}
+						catch (Exception e) {
+							
+						}
 						startActivity(i);
 					}
 				});

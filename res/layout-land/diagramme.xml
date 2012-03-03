@@ -30,17 +30,6 @@
             android:layout_height="wrap_content"
             android:text="2 moves left" >
         </TextView>
-
-        <ImageView
-            android:id="@+id/trait"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="100"
-            android:gravity="center"
-            android:height="0dip"
-            android:src="@drawable/p2"
-            android:width="0dip" >
-        </ImageView>
     </LinearLayout>
 
     <widgets.Board
