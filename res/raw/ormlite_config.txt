@@ -1,6 +1,29 @@
 #
-# generated on 2012/01/20 07:43:02
+# generated on 2012/03/28 06:37:43
 #
+# --table-start--
+dataClass=core.Source
+tableName=source
+# --table-fields-start--
+# --field-start--
+fieldName=id
+generatedId=true
+indexName=source_id_idx
+allowGeneratedIdInsert=true
+# --field-end--
+# --field-start--
+fieldName=name
+# --field-end--
+# --field-start--
+fieldName=url
+uniqueIndexName=source_url_idx
+# --field-end--
+# --field-start--
+fieldName=uploadSupported
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
 # --table-start--
 dataClass=core.Problem
 tableName=problem
@@ -36,43 +59,6 @@ allowGeneratedIdInsert=true
 # --table-end--
 #################################
 # --table-start--
-dataClass=core.Source
-tableName=source
-# --table-fields-start--
-# --field-start--
-fieldName=id
-generatedId=true
-indexName=source_id_idx
-allowGeneratedIdInsert=true
-# --field-end--
-# --field-start--
-fieldName=name
-# --field-end--
-# --field-start--
-fieldName=url
-uniqueIndexName=source_url_idx
-# --field-end--
-# --field-start--
-fieldName=uploadSupported
-# --field-end--
-# --table-fields-end--
-# --table-end--
-#################################
-# --table-start--
-dataClass=com.estragon.sql.Account
-tableName=accounts
-# --table-fields-start--
-# --field-start--
-fieldName=name
-id=true
-# --field-end--
-# --field-start--
-fieldName=password
-# --field-end--
-# --table-fields-end--
-# --table-end--
-#################################
-# --table-start--
 dataClass=com.estragon.sql.SimpleData
 tableName=simpledata
 # --table-fields-start--
@@ -92,6 +78,20 @@ fieldName=date
 # --field-end--
 # --field-start--
 fieldName=even
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.estragon.sql.Account
+tableName=accounts
+# --table-fields-start--
+# --field-start--
+fieldName=name
+id=true
+# --field-end--
+# --field-start--
+fieldName=password
 # --field-end--
 # --table-fields-end--
 # --table-end--

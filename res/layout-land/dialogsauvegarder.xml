@@ -17,7 +17,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text=" Name : " >
+                android:text="@string/name" >
             </TextView>
 
             <EditText
@@ -28,7 +28,7 @@
                 android:inputType="textCapSentences"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:text="Unamed problem" />
+                android:text="@string/unamedproblem"  />
         </LinearLayout>
 
         <LinearLayout
@@ -39,7 +39,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" Moves to mate :" >
+                android:text="@string/movestomate" >
             </TextView>
 
             <Button
@@ -66,10 +66,10 @@
             </Button>
 
             <CheckBox
-                android:id="@+id/trait"
+                android:id="@+id/traitdialogsauvegarder"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="White to play" >
+                android:text="@string/whitetoplay" >
             </CheckBox>
         </LinearLayout>
 
@@ -83,7 +83,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text=" Description : " >
+                android:text="@string/description" >
             </TextView>
 
             <EditText
@@ -92,7 +92,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:inputType="textCapSentences"
-                android:text="My new problem !" />
+                android:text="@string/mynewproblem" />
         </LinearLayout>
     </LinearLayout>
 
