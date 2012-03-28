@@ -75,8 +75,8 @@
     <string name="sharethisproblem">Share this problem</string>
 
     <string-array name="shareoptions">
-        <item>Intent share</item>
         <item>Submit to repositories</item>
+        <item>Intent share</item>
     </string-array>
 
 </resources>
