@@ -43,6 +43,7 @@
     <string name="matein">Mat en %d coups</string>
     <string name="sourcesuccesfullyadded">Source %s ajoutée</string>
     <string name="failedtoaddsource">Echec de l\'ajout de %s</string>
+     <string name="invalidurloralreadyadded">Cette adresse est invalide ou déjà présente</string>
     <string name="name"> Nom : </string>
     <string name="unamedproblem">Problème sans nom</string>
     <string name="whitetoplay">Trait aux blancs</string>
