@@ -123,7 +123,10 @@ public class Board extends View implements OnTouchListener {
 		float tailleCase = Math.min(getWidth(), getHeight()) / 8.0f;
 		int x = (i%taille);
 		int y = ((int) (i/taille));
-		if (isInverse()) y = 7 - y;
+		if (isInverse()) {
+			y = 7 - y;
+			x = 7 - x;
+		}
 		if (center) {
 			return new float[] {x * tailleCase + tailleCase / 2,y * tailleCase + tailleCase /2};
 		}
@@ -146,7 +149,10 @@ public class Board extends View implements OnTouchListener {
 		float y = event.getY();
 		int caseX = (int) (x / v.getWidth() * 8);
 		int caseY = (int) (y / v.getHeight() * 8);
-		if (isInverse()) caseY = 7 - caseY;
+		if (isInverse()) {
+			caseY = 7 - caseY;
+			caseX = 7 - caseX;
+		}
 		int numCase = caseX + caseY * 8;
 		broadcastCaseClickee(numCase);
 		return false;
