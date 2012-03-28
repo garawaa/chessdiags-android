@@ -300,6 +300,8 @@ public class Partie implements  AnalyseListener {
 	public int getCouleurDefendue() {
 		return couleurDefendue;
 	}
+	
+	
 
 
 }

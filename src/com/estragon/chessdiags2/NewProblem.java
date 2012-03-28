@@ -12,9 +12,11 @@ import widgets.Pieces;
 import widgets.Pieces.PiecesListener;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -45,8 +47,10 @@ public class NewProblem extends GDActivity implements BoardListener, PiecesListe
 	int typePieceChoisie = 0;
 	Problem problem = null;
 	ActionBarItem item = null;
+	int sharingOption = SHARE_REPOSITORIES;
 
-	public static final int DIALOG_PROGRESS = 1;
+	public static final int DIALOG_PROGRESS = 1, DIALOG_CHOOSE_SHARE = 2, DIALOG_SHARE = 3;
+	public static final int SHARE_REPOSITORIES = 0, SHARE_INTENT = 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -72,8 +76,10 @@ public class NewProblem extends GDActivity implements BoardListener, PiecesListe
 			int id = getIntent().getIntExtra("id", -1);
 			int source = getIntent().getIntExtra("source", -1);
 			String position = getIntent().getStringExtra("position");
-			if (id != -1 && source != -1) 
+			if (id != -1 && source != -1) {
 				problem = ListeProblemes.getListe().getProblem(id, source);
+				problem.setSauvegarde(true);
+			}
 			else if (position != null) {
 				try {
 					partie.importerPosition(position);
@@ -177,13 +183,27 @@ public class NewProblem extends GDActivity implements BoardListener, PiecesListe
 			if (!problem.isSauvegarde()) Toast.makeText(this, R.string.youmustsaveproblemfirst, Toast.LENGTH_LONG).show();
 			else {
 				sauvegarderProbleme();
-				dialogShare();
+				showDialog(DIALOG_CHOOSE_SHARE);
 			}
+		}
+	}
+	
+	public void intentShare() {
+		try {
+			Intent intent = new Intent(Intent.ACTION_SEND);
+			intent.setType("text/plain");
+			intent.putExtra(Intent.EXTRA_TEXT, "Check the problem I just created !");
+			Intent intentChoisi = Intent.createChooser(intent, getString(R.string.sharethisproblem));
+			if (intentChoisi != null) startActivity(intentChoisi);
+		}
+		catch (ActivityNotFoundException e) {
+			Toast.makeText(this, R.string.noactivitytohandleintent, Toast.LENGTH_LONG).show();
 		}
 	}
 
 	public void dialogShare() {
-		int nb = 0;
+		showDialog(DIALOG_SHARE);
+		/*int nb = 0;
 		ArrayList<CharSequence> listeString = new ArrayList<CharSequence>();
 		final ArrayList<Source> sources = new ArrayList<Source>();
 		for (Source source : ListeSources.getListe()) {
@@ -240,7 +260,7 @@ public class NewProblem extends GDActivity implements BoardListener, PiecesListe
 				showDialog(DIALOG_PROGRESS);
 			}
 		})
-		.show();
+		.show();*/
 	}
 
 	@Override
@@ -269,7 +289,7 @@ public class NewProblem extends GDActivity implements BoardListener, PiecesListe
 				new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog,
 					int whichButton) {
-				CheckBox box = (CheckBox) addView.findViewById(R.id.trait);
+				CheckBox box = (CheckBox) addView.findViewById(R.id.traitdialogsauvegarder);
 				boolean trait = box.isChecked();
 				partie.setTrait(trait);
 				problem.setPosition(partie.getFEN());
@@ -325,7 +345,7 @@ public class NewProblem extends GDActivity implements BoardListener, PiecesListe
 			}
 		});
 		nbMoves.setText(""+problem.getNbMoves());
-		CheckBox box = (CheckBox) addView.findViewById(R.id.trait);
+		CheckBox box = (CheckBox) addView.findViewById(R.id.traitdialogsauvegarder);
 		box.setChecked(partie.getTrait());
 		TextView nom = (TextView) addView.findViewById(R.id.nom);
 		nom.setText(problem.getNom());
@@ -342,6 +362,89 @@ public class NewProblem extends GDActivity implements BoardListener, PiecesListe
 			dialog2 = new ChessProgressDialog(this);
 			dialog2.setTitle(R.string.sending);
 			dialog = dialog2;
+			break;
+	    case DIALOG_CHOOSE_SHARE:
+	    	dialog = new AlertDialog.Builder(this).setTitle("Choose a sharing option").setPositiveButton(android.R.string.ok, new OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					
+					if (sharingOption == SHARE_INTENT) {
+						intentShare();
+					}
+					else {
+						dialogShare();
+					}
+				}
+			}).setNegativeButton(android.R.string.cancel, null).setSingleChoiceItems( R.array.shareoptions, 0, new OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					sharingOption = which;
+				}
+			}).create();
+	    	break;
+	    case DIALOG_SHARE:
+	    	int nb = 0;
+			ArrayList<CharSequence> listeString = new ArrayList<CharSequence>();
+			final ArrayList<Source> sources = new ArrayList<Source>();
+			for (Source source : ListeSources.getListe()) {
+				if (source.getId() > 1) {
+					listeString.add(source.getName());
+					sources.add(source);
+					nb++;
+				}
+			}
+			if (nb == 0) {
+				Toast.makeText(this, R.string.norepositoryfound, Toast.LENGTH_LONG);
+				return null;
+			}
+			final CharSequence[] items = listeString.toArray(new CharSequence[]{});
+			final boolean[] checked = new boolean[nb];
+			for (int i = 0; i < checked.length; i++) {
+				checked[i] = sources.get(i).isUploadSupported();
+			}
+			dialog = new AlertDialog.Builder( this )
+			.setTitle(R.string.uploadto)
+			.setMultiChoiceItems(items,checked,new OnMultiChoiceClickListener() {
+
+				@Override
+				public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+					// TODO Auto-generated method stub
+					checked[which] = isChecked;
+				}
+			})
+			.setPositiveButton(R.string.ok, new OnClickListener() {
+
+
+				@Override
+				public void onClick(DialogInterface dialog2, int which) {
+					// TODO Auto-generated method stub
+
+					int i = -1;
+					boolean zeroSources = true;
+					for (boolean b : checked) {
+						if (b) zeroSources = false;
+					}
+					if (zeroSources) {
+						Log.i(ChessDiags.NOMLOG,"No source choosen");
+						return;
+					}
+					MultiRequete multiRequete = new MultiRequete();
+					for (boolean b : checked) {
+						i++;
+						if (!b) continue;
+						Source source = sources.get(i);
+						Log.i(ChessDiags.NOMLOG,"Upload to : "+source.getUrl()+" ("+source.getId()+")");
+						multiRequete.addRequete(new RequeteUpload(problem,source));
+					}
+					multiRequete.executer();
+					showDialog(DIALOG_PROGRESS);
+				}
+			})
+			.create();
 			break;
 	    default:
 	        dialog = null;
