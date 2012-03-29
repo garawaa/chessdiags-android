@@ -73,10 +73,14 @@
     
     <string name="noactivitytohandleintent">No application found :(</string>
     <string name="sharethisproblem">Share this problem</string>
+    <string name="white">White</string>
+    <string name="black">Black</string>
+    <string name="sharemessage">%1$s to mate in %2$d move(s) %3$s</string>
+    <string name="sharetitle">My chess problem</string>
 
     <string-array name="shareoptions">
         <item>Submit to repositories</item>
-        <item>Intent share</item>
+        <item>Intent sharing</item>
     </string-array>
 
 </resources>

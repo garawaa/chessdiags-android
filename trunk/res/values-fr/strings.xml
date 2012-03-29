@@ -73,4 +73,16 @@
     <string name="emptycreationsmessage">Liste des problèmes que vous avez créés. Pour naviguer entre les catégories de problèmes, faites glisser avec votre doigt.</string>
 
           <string name="sending">Envoi ...</string>   
+          
+           <string name="noactivitytohandleintent">Aucune application n\'est disponible :(</string>
+    <string name="sharethisproblem">Partager ce problème</string>
+    <string name="white">blancs</string>
+    <string name="black">noirs</string>
+    <string name="sharemessage">Les %1$s jouent et mat %2$d coup(s) %3$s</string>
+    <string name="sharetitle">Mon problème d\'échecs</string>
+
+    <string-array name="shareoptions">
+        <item>Ajouter aux sources</item>
+        <item>Partage</item>
+    </string-array>
 </resources>
