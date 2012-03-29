@@ -4,6 +4,8 @@ import greendroid.app.GDActivity;
 import greendroid.widget.ActionBar.OnActionBarListener;
 import greendroid.widget.ActionBarItem;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import widgets.Board;
@@ -13,6 +15,7 @@ import widgets.Pieces.PiecesListener;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnMultiChoiceClickListener;
@@ -28,6 +31,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import chesspresso.Chess;
+import chesspresso.position.Position;
 
 import com.estragon.sockets.MultiRequete;
 import com.estragon.sockets.RequeteUpload;
@@ -188,18 +192,7 @@ public class NewProblem extends GDActivity implements BoardListener, PiecesListe
 		}
 	}
 	
-	public void intentShare() {
-		try {
-			Intent intent = new Intent(Intent.ACTION_SEND);
-			intent.setType("text/plain");
-			intent.putExtra(Intent.EXTRA_TEXT, "Check the problem I just created !");
-			Intent intentChoisi = Intent.createChooser(intent, getString(R.string.sharethisproblem));
-			if (intentChoisi != null) startActivity(intentChoisi);
-		}
-		catch (ActivityNotFoundException e) {
-			Toast.makeText(this, R.string.noactivitytohandleintent, Toast.LENGTH_LONG).show();
-		}
-	}
+	
 
 	public void dialogShare() {
 		showDialog(DIALOG_SHARE);
@@ -371,7 +364,7 @@ public class NewProblem extends GDActivity implements BoardListener, PiecesListe
 					// TODO Auto-generated method stub
 					
 					if (sharingOption == SHARE_INTENT) {
-						intentShare();
+						intentShare(NewProblem.this,NewProblem.this.problem);
 					}
 					else {
 						dialogShare();
@@ -458,6 +451,25 @@ public class NewProblem extends GDActivity implements BoardListener, PiecesListe
 	public void partieTerminee(int resultat) {
 		// TODO Auto-generated method stub
 		board.invalidate();
+	}
+	
+	public static void intentShare(Context context, Problem problem) {
+		try {
+			Intent intent = new Intent(Intent.ACTION_SEND);
+			intent.setType("text/plain");
+			Position position = new Position(problem.getPosition());
+			URI uri = new URI("http","www.chessdiags.com","/problem","fen="+position.getFEN()+"&moves="+problem.getNbMoves(),null);
+			intent.putExtra(Intent.EXTRA_TEXT, String.format(context.getString(R.string.sharemessage), position.getToPlay() == Chess.WHITE ? context.getString(R.string.white) : context.getString(R.string.black), problem.getNbMoves(),uri.toString()));
+			intent.putExtra(Intent.EXTRA_TITLE, R.string.sharetitle);
+			Intent intentChoisi = Intent.createChooser(intent, context.getString(R.string.sharethisproblem));
+			if (intentChoisi != null) context.startActivity(intentChoisi);
+		}
+		catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
+		catch (ActivityNotFoundException e) {
+			Toast.makeText(context, R.string.noactivitytohandleintent, Toast.LENGTH_LONG).show();
+		}
 	}
 
 
