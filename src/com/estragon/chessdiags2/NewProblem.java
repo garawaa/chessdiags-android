@@ -458,7 +458,7 @@ public class NewProblem extends GDActivity implements BoardListener, PiecesListe
 			Intent intent = new Intent(Intent.ACTION_SEND);
 			intent.setType("text/plain");
 			Position position = new Position(problem.getPosition());
-			URI uri = new URI("http","www.chessdiags.com","/problem","fen="+position.getFEN()+"&moves="+problem.getNbMoves(),null);
+			URI uri = new URI("http","www.chessdiags.com","/problem.php","fen="+position.getFEN().replace(" ", "_")+"&moves="+problem.getNbMoves(),null);
 			intent.putExtra(Intent.EXTRA_TEXT, String.format(context.getString(R.string.sharemessage), position.getToPlay() == Chess.WHITE ? context.getString(R.string.white) : context.getString(R.string.black), problem.getNbMoves(),uri.toString()));
 			intent.putExtra(Intent.EXTRA_TITLE, R.string.sharetitle);
 			Intent intentChoisi = Intent.createChooser(intent, context.getString(R.string.sharethisproblem));
