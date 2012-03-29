@@ -79,6 +79,7 @@ public class Diagramme extends GDActivity implements OnClickListener,  OnMenuIte
 		this.getActionBar().setOnActionBarListener(this);
 
 		if (problem.isEditable()) this.getActionBar().addItem(Type.Add).setDrawable(R.drawable.gd_action_bar_compose);
+		this.getActionBar().addItem(Type.Add).setDrawable(R.drawable.gd_action_bar_share);
 
 
 
@@ -250,13 +251,16 @@ public class Diagramme extends GDActivity implements OnClickListener,  OnMenuIte
 			}
 			refreshTitle();
 		}
-		else if (position == 1) {
+		else if (position == 1 && problem.isEditable()) {
 			//Edit problem button
 			Intent i = new Intent(this,NewProblem.class);
 			i.putExtra("id", problem.getId());
 			i.putExtra("source", problem.getSource());
 			startActivity(i);
 			finish(); // ? à voir
+		}
+		else if (position == 2 || (position == 1 && !problem.isEditable())) {
+			NewProblem.intentShare(this, problem);
 		}
 	}
 
