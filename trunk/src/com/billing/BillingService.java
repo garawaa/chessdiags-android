@@ -39,6 +39,7 @@ public class BillingService extends Service implements ServiceConnection {
 
 	@Override
 	public void onStart(Intent intent, int startId) {
+		if(intent == null) return;
 		if (intent.getAction().equals(Consts.ACTION_GET_PURCHASE_INFORMATION)) {
 			String notifyId = intent.getStringExtra(Consts.NOTIFICATION_ID);
 			Bundle bundle = makeRequestBundle("GET_PURCHASE_INFORMATION");
