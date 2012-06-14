@@ -63,6 +63,11 @@ public class ListeProblemes extends ArrayList<Problem>  {
 		return null;
 	}
 	
+	public Problem getRandomProblem() {
+		int random = (int) (Math.random() * this.size());
+		return get(random);
+	}
+	
 	public static void charger() {
 		LISTE = DAO.loadProblemes();
 	}

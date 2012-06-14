@@ -19,7 +19,7 @@ import com.android.vending.billing.IMarketBillingService;
 
 public class BillingService extends Service implements ServiceConnection {
 
-	public static final String TAG = "ColorKontrollBilling";
+	public static final String TAG = "ChessdiagsBilling";
 	static IMarketBillingService mService;
 	volatile boolean connecte = false;
 	BillingServiceListener listener = null;
