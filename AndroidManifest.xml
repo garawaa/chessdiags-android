@@ -15,6 +15,7 @@
         android:smallScreens="true" >
     </supports-screens>
 
+     <uses-permission android:name="com.sonyericsson.extras.liveware.aef.EXTENSION_PERMISSION" />
     <uses-permission android:name="android.permission.INTERNET" >
     </uses-permission>
     <uses-permission android:name="com.android.vending.BILLING" />
@@ -63,6 +64,38 @@
                 <action android:name="com.android.vending.billing.PURCHASE_STATE_CHANGED" />
             </intent-filter>
         </receiver>
+        
+        <receiver android:name="smartwatch.ExtensionReceiver" >
+            <intent-filter>
+
+                <!-- Generic extension intents. -->
+                <action android:name="com.sonyericsson.extras.liveware.aef.registration.EXTENSION_REGISTER_REQUEST" />
+                <action android:name="com.sonyericsson.extras.liveware.aef.registration.ACCESSORY_CONNECTION" />
+                <action android:name="android.intent.action.LOCALE_CHANGED" />
+
+                <!-- Notification intents -->
+                <action android:name="com.sonyericsson.extras.liveware.aef.notification.VIEW_EVENT_DETAIL" />
+                <action android:name="com.sonyericsson.extras.liveware.aef.notification.REFRESH_REQUEST" />
+
+                <!-- Widget intents -->
+                <action android:name="com.sonyericsson.extras.aef.widget.START_REFRESH_IMAGE_REQUEST" />
+                <action android:name="com.sonyericsson.extras.aef.widget.STOP_REFRESH_IMAGE_REQUEST" />
+                <action android:name="com.sonyericsson.extras.aef.widget.ONTOUCH" />
+                <action android:name="com.sonyericsson.extras.liveware.aef.util.widget.scheduled.refresh" />
+
+                <!-- Control intents -->
+                <action android:name="com.sonyericsson.extras.aef.control.START" />
+                <action android:name="com.sonyericsson.extras.aef.control.STOP" />
+                <action android:name="com.sonyericsson.extras.aef.control.PAUSE" />
+                <action android:name="com.sonyericsson.extras.aef.control.RESUME" />
+                <action android:name="com.sonyericsson.extras.aef.control.ERROR" />
+                <action android:name="com.sonyericsson.extras.aef.control.TOUCH_EVENT" />
+                <action android:name="com.sonyericsson.extras.aef.control.SWIPE_EVENT" />
+            </intent-filter>
+        </receiver>
+        
+         <service android:name="smartwatch.ChessdiagsExtensionService" />
+        
     </application>
 
 </manifest>
