@@ -1,11 +1,5 @@
 package com.estragon.chessdiags2;
 
-import greendroid.app.GDActivity;
-import greendroid.widget.ActionBar.OnActionBarListener;
-import greendroid.widget.ActionBarItem;
-import greendroid.widget.ActionBarItem.Type;
-import greendroid.widget.PageIndicator;
-
 import java.util.HashMap;
 
 import ressources.Ressources;
@@ -23,99 +17,102 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
-import com.estragon.chessdiags2.ProblemAdapter.ProblemItem;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.estragon.chessdiags2.ProblemListFragment.ListItemSelectedListener;
 import com.estragon.engine.Engine;
-import com.estragon.engine.Engine.EngineNotReadyException;
 import com.estragon.sockets.MultiRequete;
 import com.estragon.sockets.RequeteMAJ;
 import com.estragon.sql.DAO;
+import com.j256.ormlite.dao.Dao;
+import com.viewpagerindicator.TitlePageIndicator;
 
 import core.Problem;
 import core.Source;
 import donnees.ListeProblemes;
 import donnees.ListeSources;
 
-public class TestActivity extends GDActivity implements OnPageChangeListener, OnDismissListener {
+public class TestActivity extends SherlockFragmentActivity implements OnDismissListener, ListItemSelectedListener, OnPageChangeListener {
 
-	private ViewPager awesomePager;
-	private AwesomePagerAdapter awesomeAdapter;
+	private ViewPager viewPager;
+	private PagerAdapter adapter;
 	HashMap<Integer, ProblemAdapter> adapters = new HashMap<Integer, ProblemAdapter>();
 
-
-	ActionBarItem refresh;
-	ActionBarItem add;
-	ActionBarItem settings;
-	PageIndicator indicator;
-	
 	static final int DIALOG_LOADING = 0, DIALOG_PREMIERE_FOIS = 1, DIALOG_UPDATE = 2;
 
+	MenuItem add;
+	MenuItem refresh;
+	MenuItem settings;
+	MenuItem sort;
+	TitlePageIndicator pageIndicator;
 
 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		this.requestWindowFeature(Window.FEATURE_NO_TITLE); 
 
-
-		setActionBarContentView(R.layout.testactivity);
+		setContentView(R.layout.testactivity);
 
 		setTitle(R.string.app_name);
-		
+
 		verifPremiereFois();
 
 		//Chargement du moteur de calcul, dans un thread séparé. Ne fait rien si il est déjà chargé.
 		Engine.loadEngine();
 
-
-		this.getActionBar().removeViewAt(0); //Suppression du bouton home
-		refresh = getActionBar().addItem(Type.Add).setDrawable(R.drawable.gd_action_bar_refresh);
-		add = getActionBar().addItem(Type.Add).setDrawable(R.drawable.gd_action_bar_add);
-		settings = getActionBar().addItem(Type.Settings).setDrawable(R.drawable.gd_action_bar_settings);
-
-		awesomeAdapter = new AwesomePagerAdapter();
-		awesomePager = (ViewPager) findViewById(R.id.pager);
-		awesomePager.setAdapter(awesomeAdapter);
-		awesomePager.setOnPageChangeListener(this);
-
-		FrameLayout layout = (FrameLayout) findViewById(R.id.page_indicator_prev);
-		indicator = new PageIndicator(this);
-		indicator.setDotCount(awesomeAdapter.getCount());
-		indicator.setGravity(Gravity.CENTER);
-		layout.addView(indicator);
-
-		this.getActionBar().setOnActionBarListener(new OnActionBarListener() {
-
-			@Override
-			public synchronized void onActionBarItemClicked(int position) {
-				// TODO Auto-generated method stub
-				if (position == 0) {
-					lancerMAJ();
-				}
-				else if (position == 1) {
-					Intent i = new Intent(TestActivity.this,NewProblem.class);
-					startActivity(i);
-				}
-				else if (position == 2) {
-					Intent i = new Intent(TestActivity.this,ChessPreferences.class);
-					startActivity(i);
-				}
-			}
-
-		});
-
-
+		adapter = new ChessdiagsPagerAdapter(getSupportFragmentManager());
+		viewPager = (ViewPager) findViewById(R.id.pager);
+		viewPager.setAdapter(adapter);
+		viewPager.setOnPageChangeListener(this);
+		
+		
+		pageIndicator = (TitlePageIndicator) findViewById(R.id.indicator);
+		pageIndicator.setViewPager(viewPager);
 	}
+
+
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		add = menu.add("New problem");
+		add.setIcon(R.drawable.gd_action_bar_add)
+		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		refresh = menu.add("Update");
+		refresh.setIcon(R.drawable.gd_action_bar_refresh)
+		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		sort = menu.add("Sort");
+		sort.setIcon(R.drawable.gd_action_bar_sort_by_size)
+		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		settings = menu.add("Settings");
+		settings.setIcon(R.drawable.gd_action_bar_settings)
+		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item == refresh) {
+			lancerMAJ();
+		}
+		else if (item == add) {
+			Intent i = new Intent(TestActivity.this,NewProblem.class);
+			startActivity(i);
+		}
+		else if (item == settings) {
+			Intent i = new Intent(TestActivity.this,ChessPreferences.class);
+			startActivity(i);
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+
 
 	public void lancerMAJ() {
 		MultiRequete maj = new MultiRequete();
@@ -127,11 +124,11 @@ public class TestActivity extends GDActivity implements OnPageChangeListener, On
 			showDialog(DIALOG_UPDATE);			
 		}
 	}
-	
-	
 
-	public void dialogSupprimerDiagramme(Context context,final Problem probleme) {
-		new AlertDialog.Builder(context)
+
+
+	public void dialogSupprimerDiagramme(final Problem probleme) {
+		new AlertDialog.Builder(this)
 		.setMessage(getString(R.string.delete)+" "+probleme.getNom()+" ?")
 		.setPositiveButton(getString(R.string.yes), new OnClickListener() {
 
@@ -139,7 +136,7 @@ public class TestActivity extends GDActivity implements OnPageChangeListener, On
 			public void onClick(DialogInterface dialog, int which) {
 				// TODO Auto-generated method stub
 				DAO.deleteProblem(probleme.getSource(),probleme.getId());
-				majCurrentTab();
+				TestActivity.this.adapter.notifyDataSetChanged();
 			}
 		})
 		.setNegativeButton(getString(R.string.no), null)
@@ -150,7 +147,7 @@ public class TestActivity extends GDActivity implements OnPageChangeListener, On
 
 	public void ouvrirProbleme (Problem p) {
 		if (p == null) {
-			Log.e(ChessDiags.NOMLOG,"The problem to open is null :(");
+			Log.e("Chessdiags","The problem to open is null :(");
 		}
 		else ouvrirProbleme(p.getId(), p.getSource());
 	}
@@ -172,7 +169,7 @@ public class TestActivity extends GDActivity implements OnPageChangeListener, On
 							dismissDialog(DIALOG_LOADING);
 						}
 						catch (Exception e) {
-							
+
 						}
 						startActivity(i);
 					}
@@ -189,187 +186,42 @@ public class TestActivity extends GDActivity implements OnPageChangeListener, On
 		super.onDestroy();
 	}
 
-
-
-	private class AwesomePagerAdapter extends PagerAdapter{
-
-
-		@Override
-		public int getCount() {
-			indicator.setDotCount(ListeSources.getListe().size());
-			return ListeSources.getListe().size();
-		}
-
-		/**
-		 * Create the page for the given position.  The adapter is responsible
-		 * for adding the view to the container given here, although it only
-		 * must ensure this is done by the time it returns from
-		 * {@link #finishUpdate()}.
-		 *
-		 * @param container The containing View in which the page will be shown.
-		 * @param position The page position to be instantiated.
-		 * @return Returns an Object representing the new page.  This does not
-		 * need to be a View, but can be some other container of the page.
-		 */
-		@Override
-		public Object instantiateItem(View collection, int position) {
-			LayoutInflater inflater = (LayoutInflater) collection.getContext()
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-			View view = inflater.inflate(R.layout.page, null);
-			ListView liste = (ListView) view.findViewById(R.id.awesomelist);
-			ProblemAdapter oldAdapter = adapters.get(position);
-			if (oldAdapter == null) {
-				ProblemAdapter adapter;
-				adapter = new ProblemAdapter(liste.getContext(),ListeSources.getListe().get(position));
-				adapter.charger();
-				adapters.put(position, adapter);
-			}
-			adapters.get(position).notifyDataSetChanged();
-			liste.setAdapter(adapters.get(position));
-
-			final ProblemAdapter adapter = adapters.get(position);
-
-			liste.setOnItemClickListener(new OnItemClickListener() {
-				public void onItemClick(AdapterView<?> parent, View view,
-						int position, long id) {
-					Object item = adapter.getItem(position);
-					if (item instanceof ProblemItem) {
-						ProblemItem problemItem = (ProblemItem) item;
-						ouvrirProbleme(problemItem.getProblem());
-					}
-
-				}
-			});
-
-			liste.setOnItemLongClickListener(new OnItemLongClickListener() {
-
-				@Override
-				public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-						int position, long id) {
-					// TODO Auto-generated method stub
-					Object item = adapter.getItem(position);
-					if (item instanceof ProblemItem) {
-						ProblemItem problemItem = (ProblemItem) item;
-						Problem probleme = problemItem.getProblem();
-						if (probleme.isDeletable()) {
-							dialogSupprimerDiagramme(TestActivity.this,probleme);
-						}
-					}
-					return true;
-				}
-			});
-
-
-
-			((ViewPager) collection).addView(view,0);
-
-			return liste;
-		}
-
-
-		/**
-		 * Remove a page for the given position.  The adapter is responsible
-		 * for removing the view from its container, although it only must ensure
-		 * this is done by the time it returns from {@link #finishUpdate()}.
-		 *
-		 * @param container The containing View from which the page will be removed.
-		 * @param position The page position to be removed.
-		 * @param object The same object that was returned by
-		 * {@link #instantiateItem(View, int)}.
-		 */
-		@Override
-		public void destroyItem(View collection, int position, Object view) {
-			((ViewPager) collection).removeView((View) view);
-		}
-
-
-
-		@Override
-		public boolean isViewFromObject(View view, Object object) {
-			return view==object;
-		}
-
-
-		/**
-		 * Called when the a change in the shown pages has been completed.  At this
-		 * point you must ensure that all of the pages have actually been added or
-		 * removed from the container as appropriate.
-		 * @param container The containing View which is displaying this adapter's
-		 * page views.
-		 */
-		@Override
-		public void finishUpdate(View arg0) {}
-
-
-
-		@Override
-		public void restoreState(Parcelable arg0, ClassLoader arg1) {}
-
-		@Override
-		public Parcelable saveState() {
-			return null;
-		}
-
-		@Override
-		public void startUpdate(View arg0) {}
-
-	}
-
-	@Override
-	public void onPageScrollStateChanged(int arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onPageScrolled(int arg0, float arg1, int arg2) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onPageSelected(int arg0) {
-		// TODO Auto-generated method stub
-		majCurrentTab();
-	}
-
 	public void verifPremiereFois() {
 		int version = this.getPreferences(MODE_PRIVATE).getInt("derniereVersion", 0);
 		if (version == 0) {
 			lancerMAJ();
 			showDialog(DIALOG_PREMIERE_FOIS);
 		}
-		this.getPreferences(MODE_PRIVATE).edit().putInt("derniereVersion", ChessDiags.getVersionCode()).commit();
+		this.getPreferences(MODE_PRIVATE).edit().putInt("derniereVersion", 1).commit();
 	}
-	
+
 	protected Dialog onCreateDialog(int id) {
-	    Dialog dialog;
-	    ChessProgressDialog dialog2;
-	    switch(id) {
-	    case 1:
-	    	dialog = new AlertDialog.Builder(this).setMessage(this.getString(R.string.welcome)).setTitle(R.string.welcometitle).setPositiveButton(android.R.string.ok, null).create();
-	        break;
-	    case 2:
+		Dialog dialog;
+		ChessProgressDialog dialog2;
+		switch(id) {
+		case 1:
+			dialog = new AlertDialog.Builder(this).setMessage(this.getString(R.string.welcome)).setTitle(R.string.welcometitle).setPositiveButton(android.R.string.ok, null).create();
+			break;
+		case 2:
 			dialog2 = new ChessProgressDialog(TestActivity.this);
 			dialog2.setTitle(R.string.updating);
 			dialog = dialog2;
 			break;
-	    case DIALOG_LOADING:
-	    	final ProgressDialog dialog3 = new ProgressDialog(this);
+		case DIALOG_LOADING:
+			final ProgressDialog dialog3 = new ProgressDialog(this);
 			dialog3.setMessage(getString(R.string.loadingchessengine));
 			dialog3.setTitle(R.string.loading);
 			dialog = dialog3;
-	    	break;
-	    default:
-	        dialog = null;
-	    }
-	    return dialog;
-	    
+			break;
+		default:
+			dialog = null;
+		}
+		return dialog;
+
 	}
-	
-	
-	
+
+
+
 	@Override
 	protected void onPrepareDialog(int id, Dialog dialog) {
 		// TODO Auto-generated method stub
@@ -380,33 +232,14 @@ public class TestActivity extends GDActivity implements OnPageChangeListener, On
 		super.onPrepareDialog(id, dialog);
 	}
 
-	void majIndicator() {
-		indicator.setActiveDot(awesomePager.getCurrentItem());
-	}
-
-	void majCurrentTab() {
-		try {
-			majIndicator();
-			adapters.get(awesomePager.getCurrentItem()).notifyDataSetChanged();
-		}
-		catch (Exception e) {
-			Log.e(ChessDiags.NOMLOG,"",e);
-		}
-	}
-
 	@Override
 	protected void onRestart() {
 		// TODO Auto-generated method stub
-		if (ListeSources.hasChanged) {
-			adapters.clear();
-			awesomePager.setAdapter(new AwesomePagerAdapter());
-			ListeSources.hasChanged =false;
-		}
-		majCurrentTab();
+		adapter.notifyDataSetChanged();
 		super.onRestart();
 	}
 
-	
+
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
@@ -417,7 +250,7 @@ public class TestActivity extends GDActivity implements OnPageChangeListener, On
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
 	}
-	
+
 	@Override
 	public void onDismiss(DialogInterface dialog) {
 		// TODO Auto-generated method stub
@@ -425,16 +258,58 @@ public class TestActivity extends GDActivity implements OnPageChangeListener, On
 			removeDialog(DIALOG_UPDATE);
 		}
 		catch (Exception e) {
-			
+
 		}
 		ListeProblemes.charger();
 		ListeSources.charger();
-		adapters.clear();
-		awesomePager.setAdapter(new AwesomePagerAdapter());
-		majIndicator();
+		adapter.notifyDataSetChanged();
 	}
 
+
+
+	@Override
+	public void onListItemSelected(Problem problem) {
+		// TODO Auto-generated method stub
+		ouvrirProbleme(problem);
+	}
+
+
+
+	@Override
+	public void onLongListItemSelected(Problem problem) {
+		// TODO Auto-generated method stub
+		if (problem.getSource() == 1) {
+			dialogSupprimerDiagramme(problem);
+		}
+	}
+
+
+
+	@Override
+	public void onPageScrollStateChanged(int arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void onPageScrolled(int arg0, float arg1, int arg2) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	public void onPageSelected(int arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
 	
-	
+
+
 
 }

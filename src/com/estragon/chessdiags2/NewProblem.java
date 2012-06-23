@@ -1,9 +1,5 @@
 package com.estragon.chessdiags2;
 
-import greendroid.app.GDActivity;
-import greendroid.widget.ActionBar.OnActionBarListener;
-import greendroid.widget.ActionBarItem;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -24,7 +20,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -33,6 +28,9 @@ import android.widget.Toast;
 import chesspresso.Chess;
 import chesspresso.position.Position;
 
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.estragon.sockets.MultiRequete;
 import com.estragon.sockets.RequeteUpload;
 
@@ -43,29 +41,27 @@ import core.Source;
 import donnees.ListeProblemes;
 import donnees.ListeSources;
 
-public class NewProblem extends GDActivity implements BoardListener, PiecesListener, OnActionBarListener, PartieListener {
+public class NewProblem extends SherlockActivity implements BoardListener, PiecesListener,  PartieListener {
 
 	Partie partie = new Partie();
 	Board board;
 	Pieces pieces;
 	int typePieceChoisie = 0;
 	Problem problem = null;
-	ActionBarItem item = null;
 	int sharingOption = SHARE_REPOSITORIES;
 
 	public static final int DIALOG_PROGRESS = 1, DIALOG_CHOOSE_SHARE = 2, DIALOG_SHARE = 3;
 	public static final int SHARE_REPOSITORIES = 0, SHARE_INTENT = 1;
+	
+	MenuItem refresh;
+	MenuItem save;
+	MenuItem share;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		this.setActionBarContentView(R.layout.newproblem);
-		this.getActionBar().addItem(ActionBarItem.Type.Add).setDrawable(R.drawable.gd_action_bar_refresh);
-		this.getActionBar().addItem(ActionBarItem.Type.Add).setDrawable(R.drawable.gd_action_bar_edit);
-
-		this.getActionBar().setOnActionBarListener(this);
+		this.setContentView(R.layout.newproblem);
 
 		Object sauvegarde = this.getLastNonConfigurationInstance();
 		if (sauvegarde != null) {
@@ -89,7 +85,7 @@ public class NewProblem extends GDActivity implements BoardListener, PiecesListe
 					partie.importerPosition(position);
 				}
 				catch (Exception e) {
-					Log.e(ChessDiags.NOMLOG,"",e);
+					Log.e("Chessdiags : ","",e);
 				}
 			}
 			if (problem != null) {
@@ -97,7 +93,7 @@ public class NewProblem extends GDActivity implements BoardListener, PiecesListe
 					partie.importerProbleme(problem);
 				}
 				catch (Exception e) {
-					Log.e(ChessDiags.NOMLOG,"",e);
+					Log.e("Chessdiags : ","",e);
 				}
 			}
 			else problem = new Problem(ListeProblemes.getListe().getMaxId(1), 1, partie.getPosition(), 0, false);
@@ -117,15 +113,33 @@ public class NewProblem extends GDActivity implements BoardListener, PiecesListe
 		pieces.highLight(typePieceChoisie);
 		partie.addPartieListener(this);
 
-
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setHomeButtonEnabled(true);
 		refreshTitle();
 	}
 
-
+	
+	
+	
 	public void refreshTitle() {
 		this.setTitle(problem.getNom());
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// TODO Auto-generated method stub
+		save = menu.add("edit");
+        save.setIcon(R.drawable.gd_action_bar_edit)
+        .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        refresh = menu.add("Redraw");
+        refresh.setIcon(R.drawable.gd_action_bar_refresh)
+        .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        share = menu.add("share");
+        share.setIcon(R.drawable.gd_action_bar_share)
+        .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        checkShare();
+		return super.onCreateOptionsMenu(menu);
+	}
 
 	@Override
 	public Object onRetainNonConfigurationInstance() {
@@ -146,7 +160,8 @@ public class NewProblem extends GDActivity implements BoardListener, PiecesListe
 	}
 
 	public void checkShare() {
-		if (problem.isSauvegarde() && item == null) item = this.getActionBar().addItem(ActionBarItem.Type.Share).setDrawable(R.drawable.gd_action_bar_share);
+		if (share == null) return;
+		share.setVisible(problem.isSauvegarde());
 	}
 
 	@Override
@@ -167,32 +182,34 @@ public class NewProblem extends GDActivity implements BoardListener, PiecesListe
 	}
 
 	@Override
-	public void onActionBarItemClicked(int position) {
+	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
-		if (position == -1) finish(); //home
-		else if (position == 0) {
+		if (item.getItemId() == android.R.id.home) finish(); //home
+		else if (item == refresh) {
 			try {
 				partie.importerProbleme(problem);
 			}
 			catch (Exception e) {
-				Log.e(ChessDiags.NOMLOG,"",e);
+				Log.e("Chessdiags","",e);
 			}
 		}
-		else if (position == 1) {
+		else if (item == save) {
 			if (partie.getPositionPieces().isLegal())
 				dialogSauvegarder();
 			else Toast.makeText(this, R.string.positioninvalide, Toast.LENGTH_LONG).show();
 		}
-		else if (position == 2) {
+		else if (item == share) {
 			if (!problem.isSauvegarde()) Toast.makeText(this, R.string.youmustsaveproblemfirst, Toast.LENGTH_LONG).show();
 			else {
 				sauvegarderProbleme();
 				showDialog(DIALOG_CHOOSE_SHARE);
 			}
 		}
+		return super.onOptionsItemSelected(item);
 	}
-	
-	
+
+
+
 
 	public void dialogShare() {
 		showDialog(DIALOG_SHARE);
@@ -422,7 +439,7 @@ public class NewProblem extends GDActivity implements BoardListener, PiecesListe
 						if (b) zeroSources = false;
 					}
 					if (zeroSources) {
-						Log.i(ChessDiags.NOMLOG,"No source choosen");
+						Log.i("Chessdiags","No source choosen");
 						return;
 					}
 					MultiRequete multiRequete = new MultiRequete();
@@ -430,7 +447,7 @@ public class NewProblem extends GDActivity implements BoardListener, PiecesListe
 						i++;
 						if (!b) continue;
 						Source source = sources.get(i);
-						Log.i(ChessDiags.NOMLOG,"Upload to : "+source.getUrl()+" ("+source.getId()+")");
+						Log.i("Chessdiags","Upload to : "+source.getUrl()+" ("+source.getId()+")");
 						multiRequete.addRequete(new RequeteUpload(problem,source));
 					}
 					multiRequete.executer();

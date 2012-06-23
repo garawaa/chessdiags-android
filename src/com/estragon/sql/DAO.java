@@ -3,7 +3,6 @@ package com.estragon.sql;
 import util.Utils;
 import android.util.Log;
 
-import com.estragon.chessdiags2.ChessDiags;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
 
@@ -91,7 +90,7 @@ public class DAO {
 			return true;
 		}
 		catch (Exception e) {
-			Log.e(ChessDiags.NOMLOG,"",e);
+			Log.e("Chessdiags","",e);
 			return false;
 		}
 	}

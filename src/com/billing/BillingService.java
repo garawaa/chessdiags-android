@@ -1,8 +1,6 @@
 package com.billing;
 
 
-import com.estragon.chessdiags2.ChessDiags;
-import com.estragon.chessdiags2.R;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ComponentName;

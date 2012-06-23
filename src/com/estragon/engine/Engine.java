@@ -10,7 +10,6 @@ import android.util.Log;
 
 import com.alonsoruibal.chess.Move;
 import com.alonsoruibal.chess.uci.Uci;
-import com.estragon.chessdiags2.ChessDiags;
 import com.estragon.chessdiags2.Coup;
 
 
@@ -77,13 +76,13 @@ public class Engine {
 				// TODO Auto-generated method stub
 				writeLine("stop");
 				if (uci.getEngine().getBestMove() == 0) {
-					Log.e(ChessDiags.NOMLOG,"No move found ...");
+					Log.e("Chessdiags","No move found ...");
 				}
 				else {
 					Engine.this.broadCastBestMove(new Coup(63-Move.getFromIndex(uci.getEngine().getBestMove()),63-Move.getToIndex(uci.getEngine().getBestMove())));
-					Log.i(ChessDiags.NOMLOG,"Best move : "+uci.getEngine().getBestMove());
-					Log.i(ChessDiags.NOMLOG,"from : "+Move.getFromIndex(uci.getEngine().getBestMove()));
-					Log.i(ChessDiags.NOMLOG,"to : "+Move.getToIndex(uci.getEngine().getBestMove()));
+					Log.i("Chessdiags","Best move : "+uci.getEngine().getBestMove());
+					Log.i("Chessdiags","from : "+Move.getFromIndex(uci.getEngine().getBestMove()));
+					Log.i("Chessdiags","to : "+Move.getToIndex(uci.getEngine().getBestMove()));
 				}
 			}
 		}, milliTime);
@@ -145,7 +144,7 @@ public class Engine {
 		long millis = System.currentTimeMillis();
 		uci = new Uci();
 		this.writeLine("uci");
-		Log.i(ChessDiags.NOMLOG,"Engine loaded in "+(System.currentTimeMillis()-millis)+" ms");
+		Log.i("Chessdiags","Engine loaded in "+(System.currentTimeMillis()-millis)+" ms");
 		/*String location = this.context.getFilesDir().getAbsolutePath()+"/"+name;
 		try {
 			if (process != null) return; //if the engine is already started

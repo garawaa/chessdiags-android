@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.estragon.chessdiags2.Appli;
-import com.estragon.chessdiags2.ChessDiags;
 import com.estragon.chessdiags2.R;
 
 public class Ressources {
@@ -23,7 +22,7 @@ public class Ressources {
 					pieces[i] = BitmapFactory.decodeResource(Appli.getInstance().getResources(), idPieces[i]);
 				}
 				echiquier = BitmapFactory.decodeResource(Appli.getInstance().getResources(), R.drawable.echiquier);
-				Log.i(ChessDiags.NOMLOG,"Ressources loaded in "+(System.currentTimeMillis()-millis)+" ms");
+				Log.i("Chessdiags","Ressources loaded in "+(System.currentTimeMillis()-millis)+" ms");
 			}
 		}).start();
 	}

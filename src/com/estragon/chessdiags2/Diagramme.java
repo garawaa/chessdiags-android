@@ -1,9 +1,5 @@
 package com.estragon.chessdiags2;
 
-import greendroid.app.GDActivity;
-import greendroid.widget.ActionBar.OnActionBarListener;
-import greendroid.widget.ActionBarItem.Type;
-
 import java.util.ArrayList;
 
 import widgets.Board;
@@ -20,16 +16,13 @@ import android.gesture.Prediction;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MenuItem.OnMenuItemClickListener;
-import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.estragon.engine.Engine.EngineNotReadyException;
 import com.estragon.sql.DAO;
 
@@ -39,7 +32,7 @@ import core.PartieListener;
 import core.Problem;
 import donnees.ListeProblemes;
 
-public class Diagramme extends GDActivity implements OnClickListener,  OnMenuItemClickListener, PartieListener, OnActionBarListener, BoardListener, OnGesturePerformedListener {
+public class Diagramme extends SherlockActivity implements PartieListener, BoardListener, OnGesturePerformedListener {
 
 	private Board board = null;
 	private TextView description;
@@ -49,17 +42,15 @@ public class Diagramme extends GDActivity implements OnClickListener,  OnMenuIte
 	private Problem problem;
 
 	GestureLibrary gLib = null;
+	
+	MenuItem refresh;
+	MenuItem share;
+	MenuItem edit;
 
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);  
-		try {
-			requestWindowFeature(Window.FEATURE_NO_TITLE);
-		}
-		catch (Exception e) {
-
-		}
-
+		
 		Bundle bundle = this.getIntent().getExtras();
 		if (bundle == null || !bundle.containsKey("secondid") || !bundle.containsKey("source")) {
 			finish();
@@ -74,12 +65,9 @@ public class Diagramme extends GDActivity implements OnClickListener,  OnMenuIte
 			return;
 		}
 
-		this.setActionBarContentView(R.layout.diagramme);
-		this.getActionBar().addItem(Type.Add).setDrawable(R.drawable.gd_action_bar_refresh);
-		this.getActionBar().setOnActionBarListener(this);
-
-		if (problem.isEditable()) this.getActionBar().addItem(Type.Add).setDrawable(R.drawable.gd_action_bar_compose);
-		this.getActionBar().addItem(Type.Add).setDrawable(R.drawable.gd_action_bar_share);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setHomeButtonEnabled(true);
+		this.setContentView(R.layout.diagramme);
 
 
 
@@ -145,52 +133,52 @@ public class Diagramme extends GDActivity implements OnClickListener,  OnMenuIte
 		}
 		super.onDestroy();
 	}
-
-	@Override 
-	public boolean onCreateOptionsMenu(Menu menu) {
-		/*if (this.source == 2) {
-			MenuItem item = menu.add("Editer");
-			item.setOnMenuItemClickListener(this);
-		}*/
-		return true;
+	
+	@Override
+	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+		// TODO Auto-generated method stub
+		share = menu.add("Share");
+		share.setIcon(R.drawable.gd_action_bar_share)
+		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		refresh = menu.add("Try again");
+		refresh.setIcon(R.drawable.gd_action_bar_refresh)
+		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		edit = menu.add("Edit");
+		edit.setIcon(R.drawable.gd_action_bar_edit)
+		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		
+		edit.setVisible(problem.isEditable());
+		return super.onCreateOptionsMenu(menu);
 	}
 
+	
+	
 	@Override
-	public void onClick(View v) {
+	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
-		//if (v == forward) board.next();
-		//else if (v == backward) board.undo();
-		/*else if (v == boutonSolution) {
-			AnimationSet set = new AnimationSet(true);
+		if (item.getItemId() == android.R.id.home) finish(); //home
+		else if (item == refresh) {
+			//Refresh button
+			try {
+				this.partie.importerProbleme(problem);
+			}
+			catch (Exception e) {
 
-			  Animation animation = new AlphaAnimation(1.0f, 0f);
-
-			  animation.setDuration(700);
-			  set.addAnimation(animation);
-			  //RotateAnimation rot = new RotateAnimation(0,360*8,boutonSolution.getWidth() / 2,boutonSolution.getHeight()/2);
-			  //rot.setDuration(4000);
-			  //set.addAnimation(rot);
-			  LayoutAnimationController controller =
-			      new LayoutAnimationController(set, 0.25f);
-
-			 set.setAnimationListener(this);
-			 boutonSolution.startAnimation(set);
-		}*/
-	}
-
-
-
-	@Override
-	public boolean onMenuItemClick(MenuItem item) {
-		// TODO Auto-generated method stub
-		/*if (this.source == 2) {
-			Intent t = new Intent(this,NewProblem.class);
-			Bundle extras = new Bundle();
-			extras.putInt("id",this.id);
-			t.putExtras(extras);
-			this.startActivity(t);
-		}*/
-		return false;
+			}
+			refreshTitle();
+		}
+		else if (item == edit && problem.isEditable()) {
+			//Edit problem button
+			Intent i = new Intent(this,NewProblem.class);
+			i.putExtra("id", problem.getId());
+			i.putExtra("source", problem.getSource());
+			startActivity(i);
+			finish(); // ? à voir
+		}
+		else if (item == share) {
+			NewProblem.intentShare(this, problem);
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
@@ -237,7 +225,7 @@ public class Diagramme extends GDActivity implements OnClickListener,  OnMenuIte
 	}
 
 
-	@Override
+	/*@Override
 	public void onActionBarItemClicked(int position) {
 		// TODO Auto-generated method stub
 		if (position == -1) finish();
@@ -262,7 +250,7 @@ public class Diagramme extends GDActivity implements OnClickListener,  OnMenuIte
 		else if (position == 2 || (position == 1 && !problem.isEditable())) {
 			NewProblem.intentShare(this, problem);
 		}
-	}
+	}*/
 
 
 	@Override
@@ -289,7 +277,7 @@ public class Diagramme extends GDActivity implements OnClickListener,  OnMenuIte
 			public void run() {
 				if (resultat == PartieListener.WIN) {
 					DAO.diagrammeResolu(problem);
-					new AlertDialog.Builder(Diagramme.this).setMessage(getString(R.string.congratulations)).setPositiveButton(getString(R.string.ok), null).setNegativeButton(R.string.nextproblem, new DialogInterface.OnClickListener() {
+					new AlertDialog.Builder(Diagramme.this).setMessage(getString(R.string.congratulations)).setNegativeButton(getString(R.string.ok), null).setPositiveButton(R.string.nextproblem, new DialogInterface.OnClickListener() {
 
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
@@ -310,7 +298,7 @@ public class Diagramme extends GDActivity implements OnClickListener,  OnMenuIte
 								refreshTitle();
 							}
 							catch (Exception e) {
-								Log.e(ChessDiags.NOMLOG,"",e);
+								Log.e("Diagramme : ","",e);
 							}
 						}
 					}).show();
@@ -331,7 +319,7 @@ public class Diagramme extends GDActivity implements OnClickListener,  OnMenuIte
 				refreshTitle();
 			}
 			catch (Exception e) {
-				Log.e(ChessDiags.NOMLOG,"",e);
+				Log.e("Diagramme : ","",e);
 			}
 		}
 	}

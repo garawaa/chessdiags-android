@@ -6,13 +6,11 @@ import org.json.JSONObject;
 import android.util.Log;
 
 import com.estragon.chessdiags2.Appli;
-import com.estragon.chessdiags2.ChessDiags;
 import com.estragon.chessdiags2.R;
 import com.estragon.sql.DAO;
 
 import core.Problem;
 import core.Source;
-import donnees.ListeSources;
 
 
 public class RequeteUpload extends Requete implements IRequete {
@@ -48,7 +46,7 @@ public class RequeteUpload extends Requete implements IRequete {
 		// TODO Auto-generated method stub
 		DAO.setUploadSupported(source.getId(),true);
 		source.setUploadSupported(true);
-		Log.i(ChessDiags.NOMLOG,"Résultat upload "+source);
+		Log.i("Chessdiags","Résultat upload "+source);
 		this.message = Appli.getInstance().getString(R.string.invalidresponse);
 		try {
 			JSONArray array = data.getJSONArray("results");
@@ -64,7 +62,7 @@ public class RequeteUpload extends Requete implements IRequete {
 			
 		}
 		catch (Exception e) {
-			Log.e(ChessDiags.NOMLOG,"",e);
+			Log.e("Chessdiags","",e);
 		}
 		super.onSuccess(data);
 	}
