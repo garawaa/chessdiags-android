@@ -10,10 +10,8 @@ import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.estragon.chessdiags2.Appli;
-import com.estragon.chessdiags2.ChessDiags;
 import com.estragon.chessdiags2.R;
 import com.estragon.sql.DatabaseHelper2;
 import com.j256.ormlite.dao.Dao;
@@ -40,7 +38,7 @@ public class RequeteMAJ extends Requete implements IRequete {
 	@Override
 	public void onSuccess(final JSONObject data) {
 		// TODO Auto-generated method stub
-		Log.i(ChessDiags.NOMLOG,"Result of the update of source "+source.getId());
+		Log.i("Chessdiags","Result of the update of source "+source.getId());
 		final Handler handler = new Handler(new Callback() {
 			
 			@Override
@@ -100,12 +98,12 @@ public class RequeteMAJ extends Requete implements IRequete {
 			DatabaseHelper2.getHelper().getWritableDatabase().execSQL("DELETE FROM problem WHERE source = "+source+" AND id NOT IN "+liste);
 		}
 		catch (Exception e) {
-			Log.e(ChessDiags.NOMLOG, "Erreur ", e);
+			Log.e("Chessdiags", "Erreur ", e);
 		}
 		finally {
 			//db.endTransaction();
 		}
-		Log.e(ChessDiags.NOMLOG,(System.currentTimeMillis() - time)+" ms");
+		Log.e("Chessdiags",(System.currentTimeMillis() - time)+" ms");
 	}
 	
 

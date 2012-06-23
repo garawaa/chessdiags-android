@@ -29,21 +29,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import util.StreamUtils;
-import android.os.Handler;
-import android.os.Handler.Callback;
-import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.estragon.chessdiags2.Appli;
-import com.estragon.chessdiags2.ChessDiags;
 
 import core.Source;
 
 public abstract class Requete implements IRequete {
 	public static final String BASEURL = "http://chessdiags.com/API/";
 	public static final int EN_COURS = 0, ERREUR = 1, TRAITEMENT_ENCOURS = 2, TRAITEMENT_TERMINE = 3;
-	public static int VERSION = ChessDiags.getVersionCode();
+	public static int VERSION = 0;
 	private static CookieStore cookieStore = new BasicCookieStore();
 	public static int GET = 1;
 	public static int POST = 2;
@@ -142,7 +138,7 @@ public abstract class Requete implements IRequete {
 		}
 		else {
 			try {
-				Log.i(ChessDiags.NOMLOG,this.resultat);
+				Log.i("Chessdiags",this.resultat);
 				JSONObject lu = new JSONObject(this.resultat);
 				statut = TRAITEMENT_ENCOURS;
 				this.onSuccess(lu);
@@ -172,7 +168,7 @@ public abstract class Requete implements IRequete {
 
 	public void onFail(Exception e) {
 		statut = ERREUR;
-		Log.e(ChessDiags.NOMLOG,"Request error : ",e);
+		Log.e("Chessdiags","Request error : ",e);
 		for (IResultat resultat : listeners) {
 			resultat.onFail(e, this);
 		}

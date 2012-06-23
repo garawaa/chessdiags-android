@@ -1,11 +1,10 @@
 package com.estragon.chessdiags2;
 
 import ressources.Ressources;
-import greendroid.app.GDApplication;
+import android.app.Application;
 import android.content.res.Configuration;
-import com.estragon.chessdiags2.R;
 
-public class Appli extends GDApplication {
+public class Appli extends Application {
 	private static Appli appli;
 
 	public static Appli getInstance() {

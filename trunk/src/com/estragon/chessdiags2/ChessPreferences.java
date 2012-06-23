@@ -2,7 +2,6 @@ package com.estragon.chessdiags2;
 
 import java.lang.reflect.Method;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.app.PendingIntent.CanceledException;
@@ -14,7 +13,6 @@ import android.os.Bundle;
 import android.preference.DialogPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
-import android.preference.PreferenceActivity;
 import android.preference.PreferenceCategory;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -23,12 +21,11 @@ import android.view.View.OnClickListener;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import chesspresso.Chess;
-
+import com.actionbarsherlock.app.SherlockPreferenceActivity;
+import com.actionbarsherlock.view.MenuItem;
 import com.billing.Billing;
 import com.billing.BillingService.BillingServiceListener;
 import com.estragon.sql.DAO;
@@ -36,7 +33,7 @@ import com.estragon.sql.DAO;
 import core.Source;
 import donnees.ListeSources;
 
-public class ChessPreferences extends PreferenceActivity implements OnPreferenceClickListener, BillingServiceListener {
+public class ChessPreferences extends SherlockPreferenceActivity implements OnPreferenceClickListener, BillingServiceListener {
 
 	Preference addSource;
 	PreferenceCategory sources;
@@ -50,6 +47,13 @@ public class ChessPreferences extends PreferenceActivity implements OnPreference
 		super.onRestart();
 
 
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// TODO Auto-generated method stub
+		if (item.getItemId() == android.R.id.home) finish(); //home
+		return super.onOptionsItemSelected(item);
 	}
 
 	private void verifListe() {
@@ -132,6 +136,8 @@ public class ChessPreferences extends PreferenceActivity implements OnPreference
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		this.setTitle(R.string.settings);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setHomeButtonEnabled(true);
 		addPreferencesFromResource(R.layout.preferences);
 		sources = (PreferenceCategory) this.findPreference("sources");
 		manageSources = (PreferenceCategory) this.findPreference("manageSources");
@@ -186,7 +192,7 @@ public class ChessPreferences extends PreferenceActivity implements OnPreference
 
 
 		Preference about = findPreference("about");
-		about.setSummary("Version "+ChessDiags.getVersionName());
+		//about.setSummary("Version "+ChessDiags.getVersionName()); TODO : remettre version name
 		about.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 
 			@Override
@@ -344,7 +350,5 @@ public class ChessPreferences extends PreferenceActivity implements OnPreference
 		// TODO Auto-generated method stub
 		
 	}
-
-
 
 }

@@ -10,9 +10,7 @@ import chesspresso.move.Move;
 import chesspresso.position.FEN;
 import chesspresso.position.Position;
 
-import com.estragon.chessdiags2.ChessDiags;
 import com.estragon.chessdiags2.Coup;
-import com.estragon.chessdiags2.TestActivity;
 import com.estragon.engine.AnalyseListener;
 import com.estragon.engine.Engine;
 import com.estragon.engine.Engine.EngineNotReadyException;
@@ -29,14 +27,13 @@ public class Partie implements  AnalyseListener {
 			registerListener();
 		}
 		catch (Exception e) {
-			Log.w(ChessDiags.NOMLOG,"Warning, engine listener registration failed");
+			Log.w("Chessdiags","Warning, engine listener registration failed");
 		}
 		try {
 			importerPosition(FEN.START_POSITION);
 		}
 		catch (Exception e) {
-			Log.e(ChessDiags.NOMLOG,"This should never happen !",e);
-			System.exit(0);
+			Log.e("Chessdiags","This should never happen !",e);
 		}
 	}
 
@@ -56,16 +53,16 @@ public class Partie implements  AnalyseListener {
 
 	public boolean proposerCoup(int depart,int arrivee) {
 		if (!isToPlay()) {
-			Log.i(ChessDiags.NOMLOG,"It's not player's turn");
+			Log.i("Chessdiags","It's not player's turn");
 			return false;
 		}
 		if (isOver()) {
-			Log.i(ChessDiags.NOMLOG,"Game is already over");
+			Log.i("Chessdiags","Game is already over");
 			return false;
 		}
 		short m = isLegal(depart, arrivee);
 		if (m == 0) {
-			Log.i(ChessDiags.NOMLOG,"Move is illegal");
+			Log.i("Chessdigs","Move is illegal");
 			return false;
 		}
 		jouerCoup(m);
@@ -80,7 +77,7 @@ public class Partie implements  AnalyseListener {
 	public void jouerCoup(Coup c) {
 		short m = isLegal(c.depart, c.arrivee);
 		if (m == 0) {
-			Log.i(ChessDiags.NOMLOG,"Invalid move : "+c.depart+"/"+c.arrivee);
+			Log.i("Chessdiags","Invalid move : "+c.depart+"/"+c.arrivee);
 		}
 		else jouerCoup(m);
 	}
@@ -190,7 +187,7 @@ public class Partie implements  AnalyseListener {
 			this.positionChangee();
 		}
 		catch (Exception e) {
-			Log.e(ChessDiags.NOMLOG,"Parsing error : "+position,e);
+			Log.e("Chessdiags","Parsing error : "+position,e);
 			throw new ParsingException();
 		}
 	}

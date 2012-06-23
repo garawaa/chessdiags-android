@@ -5,7 +5,6 @@ import java.util.regex.Pattern;
 
 import android.util.Log;
 
-import com.estragon.chessdiags2.ChessDiags;
 import com.estragon.chessdiags2.Coup;
 
 public class StreamReader implements Runnable {
@@ -31,7 +30,7 @@ public class StreamReader implements Runnable {
 			}
 		}
 		catch (Exception e) {
-			Log.e(ChessDiags.NOMLOG,"broken pipe",e);
+			Log.e("Chessdiags","broken pipe",e);
 		}
 	}
 

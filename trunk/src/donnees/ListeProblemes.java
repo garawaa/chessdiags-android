@@ -3,9 +3,6 @@ package donnees;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import android.util.Log;
-
-import com.estragon.chessdiags2.ChessDiags;
 import com.estragon.sql.DAO;
 
 import core.Problem;
@@ -66,6 +63,16 @@ public class ListeProblemes extends ArrayList<Problem>  {
 	public Problem getRandomProblem() {
 		int random = (int) (Math.random() * this.size());
 		return get(random);
+	}
+	
+	public static ListeProblemes getProblemesFromSource(int idSource) {
+		ListeProblemes liste = new ListeProblemes();
+		for (Problem problem : getListe()) {
+			if (problem.getSource() == idSource) {
+				liste.add(problem);
+			}
+		}
+		return liste;
 	}
 	
 	public static void charger() {

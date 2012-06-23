@@ -1,22 +1,20 @@
 package com.estragon.chessdiags2;
 
-import greendroid.widget.ItemAdapter;
-import greendroid.widget.item.Item;
-import greendroid.widget.item.LongTextItem;
-import greendroid.widget.item.SeparatorItem;
-import greendroid.widget.item.ThumbnailItem;
-import greendroid.widget.itemview.ItemView;
+import android.content.ClipData.Item;
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.actionbarsherlock.internal.view.menu.MenuView.ItemView;
+
 import core.Problem;
 import core.Source;
 import donnees.ListeProblemes;
 import donnees.ListeSources;
 
-public class ProblemAdapter extends ItemAdapter {
 
+public class ProblemAdapter {
+/*
 	Source source;
 	boolean empty = false;
 
@@ -141,9 +139,7 @@ public class ProblemAdapter extends ItemAdapter {
 		view.setObject(item);
 		return (View) view;
 	}
-
-
-
+*/
 
 
 }
