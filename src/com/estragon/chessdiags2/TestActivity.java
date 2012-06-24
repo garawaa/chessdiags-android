@@ -96,16 +96,16 @@ public class TestActivity extends SherlockFragmentActivity implements OnDismissL
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		add = menu.add("New problem");
+		add = menu.add(R.string.newproblem);
 		add.setIcon(R.drawable.gd_action_bar_add)
 		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-		refresh = menu.add("Update");
+		refresh = menu.add(R.string.update);
 		refresh.setIcon(R.drawable.gd_action_bar_refresh)
 		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 		/*sort = menu.add("Sort");
 		sort.setIcon(R.drawable.gd_action_bar_sort_by_size)
 		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);*/
-		settings = menu.add("Settings");
+		settings = menu.add(R.string.settings);
 		settings.setIcon(R.drawable.gd_action_bar_settings)
 		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 		return true;

@@ -128,13 +128,13 @@ public class NewProblem extends SherlockActivity implements BoardListener, Piece
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// TODO Auto-generated method stub
-		save = menu.add("edit");
+		save = menu.add(R.string.edit);
         save.setIcon(R.drawable.gd_action_bar_edit)
         .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        refresh = menu.add("Redraw");
+        refresh = menu.add(R.string.redraw);
         refresh.setIcon(R.drawable.gd_action_bar_refresh)
         .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-        share = menu.add("share");
+        share = menu.add(R.string.share);
         share.setIcon(R.drawable.gd_action_bar_share)
         .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         checkShare();

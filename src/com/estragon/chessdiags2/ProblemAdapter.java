@@ -36,7 +36,10 @@ public class ProblemAdapter extends ArrayAdapter<Problem> {
 	private void charger() {
 		setNotifyOnChange(false);
 		clear();
-		addAll(ListeProblemes.getProblemesFromSource(idSource));
+		ListeProblemes problemes = ListeProblemes.getProblemesFromSource(idSource);
+		for (Problem p : problemes) {
+			add(p);
+		}
 	}
 
 

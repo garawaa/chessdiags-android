@@ -202,8 +202,9 @@ public class ChessPreferences extends SherlockPreferenceActivity implements OnPr
 				WebSettings webSettings = view.getSettings();
 				webSettings.setSavePassword(false);
 				webSettings.setSaveFormData(false);
-				webSettings.setJavaScriptEnabled(true);
+				webSettings.setJavaScriptEnabled(false);
 				webSettings.setSupportZoom(false);
+				webSettings.setDefaultTextEncodingName("utf-8");
 				view.loadUrl("file:///android_res/raw/about.html");
 				AlertDialog dialog = new AlertDialog.Builder(ChessPreferences.this).setView(view).setPositiveButton(R.string.ok, null).show();
 				return true;
