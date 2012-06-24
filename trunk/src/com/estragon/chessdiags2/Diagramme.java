@@ -137,13 +137,13 @@ public class Diagramme extends SherlockActivity implements PartieListener, Board
 	@Override
 	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
 		// TODO Auto-generated method stub
-		share = menu.add("Share");
+		share = menu.add(R.string.share);
 		share.setIcon(R.drawable.gd_action_bar_share)
 		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-		refresh = menu.add("Try again");
+		refresh = menu.add(R.string.tryagain);
 		refresh.setIcon(R.drawable.gd_action_bar_refresh)
 		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-		edit = menu.add("Edit");
+		edit = menu.add(R.string.edit);
 		edit.setIcon(R.drawable.gd_action_bar_edit)
 		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
 		
