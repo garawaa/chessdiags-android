@@ -14,7 +14,7 @@
     <string name="loadingchessengine">Loading chess engine …</string>
     <string name="ok">OK</string>
     <string name="error">error</string>
-    <string name="update">update</string>
+    <string name="update">Update</string>
     <string name="invalidurl">invalid url</string>
     <string name="cancel">Cancel</string>
     <string name="addsource">Add a source</string>
@@ -78,6 +78,11 @@
     <string name="black">Black</string>
     <string name="sharemessage">%1$s to mate in %2$d move(s) %3$s</string>
     <string name="sharetitle">My chess problem</string>
+    
+    <string name="newproblem">New problem</string>
+    <string name="share">Share</string>
+    <string name="edit">Edit</string>
+    <string name="redraw">Redraw</string>
 
     <string-array name="shareoptions">
         <item>Submit to repositories</item>
