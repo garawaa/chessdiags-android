@@ -69,7 +69,7 @@
     <string name="nextproblem">Next problem</string>
     <string name="nextproblemnotfound">No more problems on this repository</string>
     <string name="invalidfen">Error : invalid position</string>
-    <string name="emptycreationsmessage">Here is the list of the problems you have created. To switch between problem repositories, swype with your finger.</string>
+    <string name="emptycreationsmessage">Here is the list of the problems you have created.\nTo switch between problem repositories, swipe with your finger.</string>
     <string name="sending">Sending ...</string>
     
     <string name="noactivitytohandleintent">No application found :(</string>
