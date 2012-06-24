@@ -4,6 +4,7 @@ import util.Utils;
 import android.util.Log;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.QueryBuilder;
 
 import core.Problem;
@@ -99,6 +100,11 @@ public class DAO {
 		try {
 			getSourceDao().deleteById(id);
 			ListeSources.getListe().remove(ListeSources.getListe().getSourceById(id));
+			DeleteBuilder<Problem,Integer> delete = getProblemDao().deleteBuilder();
+			delete.where().eq("source",id);
+			getProblemDao().delete(delete.prepare());
+			ListeProblemes.charger();
+			
 			return true;
 		}
 		catch (Exception e) {

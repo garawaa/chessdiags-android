@@ -14,21 +14,24 @@ import core.Problem;
 import donnees.ListeProblemes;
 
 public class ProblemListFragment extends ListFragment implements OnItemLongClickListener {
-
-	private int index = 0;
+	
 	private ListItemSelectedListener selectedListener;
 	int idSource;
-	ListAdapter adapter;
+	ProblemAdapter adapter;
 
 	public ProblemListFragment(int idSource) {
+		this();
 		this.idSource = idSource;
+	}
+	
+	public ProblemListFragment() {
+		
 	}
 
 	
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		index = position;
 		Log.e("Click : ",""+position);
 		notifySelected((Problem)adapter.getItem(position));
 	}
@@ -36,27 +39,30 @@ public class ProblemListFragment extends ListFragment implements OnItemLongClick
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		if (savedInstanceState != null) {
+			idSource = savedInstanceState.getInt("idSource",1);
+		}
+		
 		getListView().setOnItemLongClickListener(this);
 		getListView().setFastScrollEnabled(true);
-		adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1,ListeProblemes.getProblemesFromSource(idSource));
-
-		setListAdapter(adapter);
-		
-		if (savedInstanceState != null) {
-			index = savedInstanceState.getInt("index", 0);
-			notifySelected((Problem)adapter.getItem(index));
+		if (idSource == 1) {
+			setEmptyText(getString(R.string.emptycreationsmessage));
 		}
+		
+		
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putInt("index", index);
+		outState.putInt("idSource", idSource);
 	}
 
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
+		adapter = new ProblemAdapter(activity, idSource);
+		setListAdapter(adapter);
 		try {
 			selectedListener = (ListItemSelectedListener) activity;
 		} catch (ClassCastException e) {
@@ -85,6 +91,14 @@ public class ProblemListFragment extends ListFragment implements OnItemLongClick
 		public void onLongListItemSelected(Problem problem);
 	}
 
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		adapter.notifyDataSetChanged();
+		super.onResume();
+	}
+
+	
 
 
 	

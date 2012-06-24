@@ -2,12 +2,14 @@ package donnees;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 
 import com.estragon.sql.DAO;
 
 import core.Problem;
 
-public class ListeProblemes extends ArrayList<Problem>  {
+public class ListeProblemes extends ArrayList<Problem> implements Comparator<Problem> {
 	
 	static ListeProblemes LISTE;
 	
@@ -51,11 +53,16 @@ public class ListeProblemes extends ArrayList<Problem>  {
 	}
 	
 	public Problem getNextProblem(int source, int id,boolean sens) {
-		Problem problem = null;
-		for (Problem p : this) {
-			if (sens && p.getSource() == source && p.getId() > id) return p;
-			else if (!sens && p.getSource() == source && p.getId() == id) return problem;
-			else if (p.getSource() == source) problem = p;
+		ListeProblemes liste = getProblemesFromSource(source);
+		Problem previous = null;
+		for (Problem p : liste) {
+			if (p.getId() == id) {
+				if (!sens) return previous;
+			}
+			if (sens && previous != null && previous.getId() == id) {
+				return p;
+			}
+			previous = p;
 		}
 		return null;
 	}
@@ -72,7 +79,18 @@ public class ListeProblemes extends ArrayList<Problem>  {
 				liste.add(problem);
 			}
 		}
+		Collections.sort(liste,liste);
 		return liste;
+	}
+	
+	@Override
+	public int compare(Problem lhs, Problem rhs) {
+		// TODO Auto-generated method stub
+		if (lhs.getNbMoves() < rhs.getNbMoves())
+			return -1;
+		if (lhs.getNbMoves() == rhs.getNbMoves())
+			return lhs.getNom().compareToIgnoreCase(rhs.getNom());
+		else return 1;
 	}
 	
 	public static void charger() {
