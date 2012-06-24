@@ -5,15 +5,14 @@ import java.util.Map;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import core.Source;
 import donnees.ListeProblemes;
 import donnees.ListeSources;
 
-public class ChessdiagsPagerAdapter extends FragmentPagerAdapter {
+public class ChessdiagsPagerAdapter extends FragmentStatePagerAdapter {
 
 	private Map<Integer, ListFragment> lists = new HashMap<Integer, ListFragment>();
 	

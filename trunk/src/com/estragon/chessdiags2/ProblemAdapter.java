@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ public class ProblemAdapter extends ArrayAdapter<Problem> {
 	}
 	
 	private void charger() {
+		Log.i("Chessdiags", "Mise à jour de l'adapter");
 		setNotifyOnChange(false);
 		clear();
 		ListeProblemes problemes = ListeProblemes.getProblemesFromSource(idSource);
@@ -47,9 +49,13 @@ public class ProblemAdapter extends ArrayAdapter<Problem> {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		//TODO : optimiser avec convertView
 		Problem problem = getItem(position);
-		LayoutInflater inflater = (LayoutInflater) getContext()
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View rowView = inflater.inflate(R.layout.problemitem, parent, false);
+		View rowView = convertView;
+		if (convertView == null) {
+			LayoutInflater inflater = (LayoutInflater) getContext()
+					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			rowView = inflater.inflate(R.layout.problemitem, parent, false);
+		}
+		
 		TextView textView = (TextView) rowView.findViewById(R.id.label);
 		ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
 		TextView subtitle = (TextView) rowView.findViewById(R.id.subtitle);
