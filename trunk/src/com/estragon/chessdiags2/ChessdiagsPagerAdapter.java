@@ -41,7 +41,6 @@ public class ChessdiagsPagerAdapter extends FragmentPagerAdapter {
 	@Override
 	public void notifyDataSetChanged() {
 		// TODO Auto-generated method stub
-		Log.e("Ok","eok");
 		for (ListFragment fragment : lists.values()) {
 			ArrayAdapter adapter = ((ArrayAdapter) fragment.getListAdapter());
 			adapter.notifyDataSetChanged();
