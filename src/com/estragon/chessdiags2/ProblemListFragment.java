@@ -31,6 +31,14 @@ public class ProblemListFragment extends ListFragment implements OnItemLongClick
 	
 
 	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		Log.i("Chessdiags", "fragment on create");
+		
+	}
+
+	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		Log.e("Click : ",""+position);
 		notifySelected((Problem)adapter.getItem(position));
@@ -48,7 +56,13 @@ public class ProblemListFragment extends ListFragment implements OnItemLongClick
 		if (idSource == 1) {
 			setEmptyText(getString(R.string.emptycreationsmessage));
 		}
-		
+		adapter = new ProblemAdapter(getActivity(), idSource);
+		setListAdapter(adapter);
+		try {
+			selectedListener = (ListItemSelectedListener) getActivity();
+		} catch (ClassCastException e) {
+			//e.printStackTrace();
+		}
 		
 	}
 
@@ -61,13 +75,7 @@ public class ProblemListFragment extends ListFragment implements OnItemLongClick
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		adapter = new ProblemAdapter(activity, idSource);
-		setListAdapter(adapter);
-		try {
-			selectedListener = (ListItemSelectedListener) activity;
-		} catch (ClassCastException e) {
-			e.printStackTrace();
-		}
+		
 	}
 
 	private void notifySelected(Problem probleme) {
