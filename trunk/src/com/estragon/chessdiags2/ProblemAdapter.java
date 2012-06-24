@@ -1,19 +1,62 @@
 package com.estragon.chessdiags2;
 
-import android.content.ClipData.Item;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.actionbarsherlock.internal.view.menu.MenuView.ItemView;
-
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 import core.Problem;
-import core.Source;
 import donnees.ListeProblemes;
-import donnees.ListeSources;
 
 
-public class ProblemAdapter {
+
+public class ProblemAdapter extends ArrayAdapter<Problem> {
+
+	int idSource;
+	
+	public ProblemAdapter(Context context,int idSource) {
+		super(context, android.R.layout.simple_list_item_1);
+		this.idSource = idSource;
+		charger();
+	}
+
+	@Override
+	public void notifyDataSetChanged() {
+		// TODO Auto-generated method stub
+		charger();
+		super.notifyDataSetChanged();
+	}
+	
+	private void charger() {
+		setNotifyOnChange(false);
+		clear();
+		addAll(ListeProblemes.getProblemesFromSource(idSource));
+	}
+
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		//TODO : optimiser avec convertView
+		Problem problem = getItem(position);
+		LayoutInflater inflater = (LayoutInflater) getContext()
+				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View rowView = inflater.inflate(R.layout.problemitem, parent, false);
+		TextView textView = (TextView) rowView.findViewById(R.id.label);
+		ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
+		TextView subtitle = (TextView) rowView.findViewById(R.id.subtitle);
+		textView.setText(getItem(position).getNom());
+		if (problem.isResolu()) imageView.setImageResource(android.R.drawable.star_big_on);
+		else imageView.setImageResource(android.R.drawable.star_big_off);
+		subtitle.setText("Mate in "+problem.getNbMoves());
+		return rowView;
+	}
+	
 /*
 	Source source;
 	boolean empty = false;

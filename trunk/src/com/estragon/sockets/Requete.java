@@ -33,13 +33,14 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.estragon.chessdiags2.Appli;
+import com.estragon.chessdiags2.TestActivity;
 
 import core.Source;
 
 public abstract class Requete implements IRequete {
 	public static final String BASEURL = "http://chessdiags.com/API/";
 	public static final int EN_COURS = 0, ERREUR = 1, TRAITEMENT_ENCOURS = 2, TRAITEMENT_TERMINE = 3;
-	public static int VERSION = 0;
+	public static int VERSION = TestActivity.getVersionCode();
 	private static CookieStore cookieStore = new BasicCookieStore();
 	public static int GET = 1;
 	public static int POST = 2;

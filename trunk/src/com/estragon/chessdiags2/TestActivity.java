@@ -6,21 +6,17 @@ import ressources.Ressources;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -30,7 +26,6 @@ import com.estragon.engine.Engine;
 import com.estragon.sockets.MultiRequete;
 import com.estragon.sockets.RequeteMAJ;
 import com.estragon.sql.DAO;
-import com.j256.ormlite.dao.Dao;
 import com.viewpagerindicator.TitlePageIndicator;
 
 import core.Problem;
@@ -77,7 +72,27 @@ public class TestActivity extends SherlockFragmentActivity implements OnDismissL
 		pageIndicator.setViewPager(viewPager);
 	}
 
+	public static int getVersionCode() 
+	{
+		try {
+			ComponentName comp = new ComponentName(Appli.getInstance().getApplicationContext(), TestActivity.class);
+			PackageInfo pinfo = Appli.getInstance().getApplicationContext().getPackageManager().getPackageInfo(comp.getPackageName(), 0);
+			return pinfo.versionCode;
+		} catch (android.content.pm.PackageManager.NameNotFoundException e) {
+			return 0;
+		}
+	}
 
+	public static String getVersionName() 
+	{
+		try {
+			ComponentName comp = new ComponentName(Appli.getInstance().getApplicationContext(), TestActivity.class);
+			PackageInfo pinfo = Appli.getInstance().getApplicationContext().getPackageManager().getPackageInfo(comp.getPackageName(), 0);
+			return pinfo.versionName;
+		} catch (android.content.pm.PackageManager.NameNotFoundException e) {
+			return "?";
+		}
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -87,9 +102,9 @@ public class TestActivity extends SherlockFragmentActivity implements OnDismissL
 		refresh = menu.add("Update");
 		refresh.setIcon(R.drawable.gd_action_bar_refresh)
 		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-		sort = menu.add("Sort");
+		/*sort = menu.add("Sort");
 		sort.setIcon(R.drawable.gd_action_bar_sort_by_size)
-		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);*/
 		settings = menu.add("Settings");
 		settings.setIcon(R.drawable.gd_action_bar_settings)
 		.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
@@ -127,6 +142,19 @@ public class TestActivity extends SherlockFragmentActivity implements OnDismissL
 
 
 
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		notifyChanges();
+		super.onResume();
+	}
+
+	private void notifyChanges() {
+		adapter.notifyDataSetChanged();
+		pageIndicator.notifyDataSetChanged();
+	}
+
+
 	public void dialogSupprimerDiagramme(final Problem probleme) {
 		new AlertDialog.Builder(this)
 		.setMessage(getString(R.string.delete)+" "+probleme.getNom()+" ?")
@@ -136,7 +164,7 @@ public class TestActivity extends SherlockFragmentActivity implements OnDismissL
 			public void onClick(DialogInterface dialog, int which) {
 				// TODO Auto-generated method stub
 				DAO.deleteProblem(probleme.getSource(),probleme.getId());
-				TestActivity.this.adapter.notifyDataSetChanged();
+				notifyChanges();
 			}
 		})
 		.setNegativeButton(getString(R.string.no), null)
@@ -232,14 +260,6 @@ public class TestActivity extends SherlockFragmentActivity implements OnDismissL
 		super.onPrepareDialog(id, dialog);
 	}
 
-	@Override
-	protected void onRestart() {
-		// TODO Auto-generated method stub
-		adapter.notifyDataSetChanged();
-		super.onRestart();
-	}
-
-
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
@@ -262,10 +282,14 @@ public class TestActivity extends SherlockFragmentActivity implements OnDismissL
 		}
 		ListeProblemes.charger();
 		ListeSources.charger();
-		adapter.notifyDataSetChanged();
+		notifyChanges();
 	}
 
 
+	protected void onRestart() {
+		notifyChanges();
+		super.onRestart();
+	}
 
 	@Override
 	public void onListItemSelected(Problem problem) {

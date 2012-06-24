@@ -192,7 +192,7 @@ public class ChessPreferences extends SherlockPreferenceActivity implements OnPr
 
 
 		Preference about = findPreference("about");
-		//about.setSummary("Version "+ChessDiags.getVersionName()); TODO : remettre version name
+		about.setSummary("Version "+TestActivity.getVersionName());
 		about.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 
 			@Override
