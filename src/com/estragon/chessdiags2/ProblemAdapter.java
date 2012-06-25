@@ -30,6 +30,7 @@ public class ProblemAdapter extends ArrayAdapter<Problem> {
 	@Override
 	public void notifyDataSetChanged() {
 		// TODO Auto-generated method stub
+		Log.i("ChessDiags", "Adapter source : "+idSource);
 		charger();
 		super.notifyDataSetChanged();
 	}

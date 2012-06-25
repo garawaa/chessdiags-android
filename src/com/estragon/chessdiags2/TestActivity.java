@@ -27,6 +27,7 @@ import com.estragon.sockets.MultiRequete;
 import com.estragon.sockets.RequeteMAJ;
 import com.estragon.sql.DAO;
 import com.viewpagerindicator.TitlePageIndicator;
+import com.viewpagerindicator.TitlePageIndicator.IndicatorStyle;
 
 import core.Problem;
 import core.Source;
@@ -70,6 +71,7 @@ public class TestActivity extends SherlockFragmentActivity implements OnDismissL
 		
 		pageIndicator = (TitlePageIndicator) findViewById(R.id.indicator);
 		pageIndicator.setViewPager(viewPager);
+		pageIndicator.setFooterIndicatorStyle(IndicatorStyle.Triangle);
 	}
 
 	public static int getVersionCode() 
@@ -283,12 +285,6 @@ public class TestActivity extends SherlockFragmentActivity implements OnDismissL
 		ListeProblemes.charger();
 		ListeSources.charger();
 		notifyChanges();
-	}
-
-
-	protected void onRestart() {
-		notifyChanges();
-		super.onRestart();
 	}
 
 	@Override
