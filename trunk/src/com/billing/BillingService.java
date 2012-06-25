@@ -37,27 +37,36 @@ public class BillingService extends Service implements ServiceConnection {
 
 	@Override
 	public void onStart(Intent intent, int startId) {
-		if(intent == null || intent.getAction() == null) return;
-		if (intent.getAction().equals(Consts.ACTION_GET_PURCHASE_INFORMATION)) {
-			String notifyId = intent.getStringExtra(Consts.NOTIFICATION_ID);
-			Bundle bundle = makeRequestBundle("GET_PURCHASE_INFORMATION");
-			bundle.putLong(Consts.BILLING_REQUEST_NONCE, Security.generateNonce());
-			bundle.putStringArray(Consts.BILLING_REQUEST_NOTIFY_IDS, new String[] {notifyId});
-			try {
-				Bundle response = mService.sendBillingRequest(bundle);
-			}
-			catch (RemoteException e) {
+		try {
+			if(intent == null || intent.getAction() == null) return;
+			if (intent.getAction().equals(Consts.ACTION_GET_PURCHASE_INFORMATION)) {
+				String notifyId = intent.getStringExtra(Consts.NOTIFICATION_ID);
+				Bundle bundle = makeRequestBundle("GET_PURCHASE_INFORMATION");
+				bundle.putLong(Consts.BILLING_REQUEST_NONCE, Security.generateNonce());
+				bundle.putStringArray(Consts.BILLING_REQUEST_NOTIFY_IDS, new String[] {notifyId});
+				try {
+					Bundle response = mService.sendBillingRequest(bundle);
+				}
+				catch (RemoteException e) {
+
+				}
+				catch (NullPointerException e) {
+					
+				}
 
 			}
+			else if (intent.getAction().equals(Consts.ACTION_PURCHASE_STATE_CHANGED)) {
+				String signedData = intent.getStringExtra(Consts.INAPP_SIGNED_DATA);
+				String signature = intent.getStringExtra(Consts.INAPP_SIGNATURE);
 
+				//Un achat a été fait
+				Toast.makeText(this, com.estragon.chessdiags2.R.string.thanksforsupport, Toast.LENGTH_LONG).show();
+			}
 		}
-		else if (intent.getAction().equals(Consts.ACTION_PURCHASE_STATE_CHANGED)) {
-			String signedData = intent.getStringExtra(Consts.INAPP_SIGNED_DATA);
-			String signature = intent.getStringExtra(Consts.INAPP_SIGNATURE);
-
-			//Un achat a été fait
-			Toast.makeText(this, com.estragon.chessdiags2.R.string.thanksforsupport, 100).show();
+		catch (Exception e) {
+			
 		}
+		
 	}
 
 	@Override

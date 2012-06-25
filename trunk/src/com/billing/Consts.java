@@ -65,11 +65,11 @@ public class Consts {
     // Intent actions that we send from the BillingReceiver to the
     // BillingService.  Defined by this application.
     public static final String ACTION_CONFIRM_NOTIFICATION =
-        "com.example.dungeons.CONFIRM_NOTIFICATION";
+        "com.estragon.chessdiags2.CONFIRM_NOTIFICATION";
     public static final String ACTION_GET_PURCHASE_INFORMATION =
-        "com.example.dungeons.GET_PURCHASE_INFORMATION";
+        "com.estragon.chessdiags2.GET_PURCHASE_INFORMATION";
     public static final String ACTION_RESTORE_TRANSACTIONS =
-        "com.example.dungeons.RESTORE_TRANSACTIONS";
+        "com.estragon.chessdiags2.RESTORE_TRANSACTIONS";
 
     // Intent actions that we receive in the BillingReceiver from Market.
     // These are defined by Market and cannot be changed.
