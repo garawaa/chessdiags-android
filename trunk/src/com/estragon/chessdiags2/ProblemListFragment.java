@@ -103,6 +103,7 @@ public class ProblemListFragment extends ListFragment implements OnItemLongClick
 	public void onResume() {
 		// TODO Auto-generated method stub
 		adapter.notifyDataSetChanged();
+		adapter.notifyDataSetInvalidated();
 		super.onResume();
 	}
 
