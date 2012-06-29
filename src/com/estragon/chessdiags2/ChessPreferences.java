@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.os.Bundle;
 import android.preference.DialogPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceCategory;
@@ -32,12 +33,14 @@ import com.estragon.sql.DAO;
 
 import core.Source;
 import donnees.ListeSources;
+import donnees.comparateurs.Trieur;
 
 public class ChessPreferences extends SherlockPreferenceActivity implements OnPreferenceClickListener, BillingServiceListener {
 
 	Preference addSource;
 	PreferenceCategory sources;
 	PreferenceCategory manageSources;
+	ListPreference sorter;
 	private Method mStartIntentSender;
 	private Object[] mStartIntentSenderArgs = new Object[5];
 
@@ -141,7 +144,12 @@ public class ChessPreferences extends SherlockPreferenceActivity implements OnPr
 		addPreferencesFromResource(R.layout.preferences);
 		sources = (PreferenceCategory) this.findPreference("sources");
 		manageSources = (PreferenceCategory) this.findPreference("manageSources");
-
+		sorter = (ListPreference) this.findPreference("trieur");
+		
+		sorter.setEntries(R.array.sortentries);
+		sorter.setEntryValues(new String[] {"0","1"});
+		sorter.setDefaultValue(""+Trieur.TRI_NBMOVES);
+		
 		majListe();
 
 		addSource = new CustomPreference(this,null);

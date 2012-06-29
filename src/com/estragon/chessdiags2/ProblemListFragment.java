@@ -34,13 +34,11 @@ public class ProblemListFragment extends ListFragment implements OnItemLongClick
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		Log.i("Chessdiags", "fragment on create");
-		
 	}
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		Log.e("Click : ",""+position);
+		Log.i("Click : ",""+position);
 		notifySelected((Problem)adapter.getItem(position));
 	}
 
@@ -53,6 +51,7 @@ public class ProblemListFragment extends ListFragment implements OnItemLongClick
 		
 		getListView().setOnItemLongClickListener(this);
 		getListView().setFastScrollEnabled(true);
+
 		if (idSource == 1) {
 			setEmptyText(getString(R.string.emptycreationsmessage));
 		}

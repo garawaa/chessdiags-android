@@ -22,17 +22,27 @@ public class ChessdiagsPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-    	Source source = ListeSources.getListe().get(position);
-    	lists.put(position, new ProblemListFragment(source.getId()));
-    	return lists.get(position);
+    	if (position < getCount() - 1) {
+    		Source source = ListeSources.getListe().get(position);
+        	lists.put(position, new ProblemListFragment(source.getId()));
+        	return lists.get(position);
+    	}
+    	else {
+    		return new HistoryListFragment();
+    	}
     }
 
     @Override
 	public CharSequence getPageTitle(int position) {
 		// TODO Auto-generated method stub
-    	Source source = ListeSources.getListe().get(position);
-    	int[] nb = ListeProblemes.getListe().getNbProblemes(source.getId());
-    	return " "+ListeSources.getListe().get(position).getName()+" ("+nb[1]+"/"+nb[0]+") ";
+    	if (position < getCount() - 1) {
+        	Source source = ListeSources.getListe().get(position);
+        	int[] nb = ListeProblemes.getListe().getNbProblemes(source.getId());
+        	return " "+ListeSources.getListe().get(position).getName()+" ("+nb[1]+"/"+nb[0]+") ";
+    	}
+    	else {
+    		return Appli.getInstance().getString(R.string.history);
+    	}
 	}
 
     
@@ -50,7 +60,7 @@ public class ChessdiagsPagerAdapter extends FragmentStatePagerAdapter {
 
 	@Override
     public int getCount() {
-        return ListeSources.getListe().size();
+        return ListeSources.getListe().size() + 1;
     }
 	
 	
