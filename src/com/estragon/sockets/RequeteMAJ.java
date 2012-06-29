@@ -13,7 +13,7 @@ import android.util.Log;
 
 import com.estragon.chessdiags2.Appli;
 import com.estragon.chessdiags2.R;
-import com.estragon.sql.DatabaseHelper2;
+import com.estragon.sql.DatabaseHelper;
 import com.j256.ormlite.dao.Dao;
 
 import core.Problem;
@@ -67,7 +67,7 @@ public class RequeteMAJ extends Requete implements IRequete {
 		long time = System.currentTimeMillis();
 		//db.beginTransaction();
 		try {
-			final Dao<Problem, Integer> simpleDao = DatabaseHelper2.getHelper().getProblemDao();
+			final Dao<Problem, Integer> simpleDao = DatabaseHelper.getHelper().getProblemDao();
 			JSONArray problemes = data.getJSONArray("diags");
 			final ArrayList<Problem> listeProblemes = new ArrayList<Problem>();
 			for (int i = 0;i < problemes.length();i++) {
@@ -95,7 +95,7 @@ public class RequeteMAJ extends Requete implements IRequete {
 				}
 			});
 
-			DatabaseHelper2.getHelper().getWritableDatabase().execSQL("DELETE FROM problem WHERE source = "+source+" AND id NOT IN "+liste);
+			DatabaseHelper.getHelper().getWritableDatabase().execSQL("DELETE FROM problem WHERE source = "+source+" AND id NOT IN "+liste);
 		}
 		catch (Exception e) {
 			Log.e("Chessdiags", "Erreur ", e);

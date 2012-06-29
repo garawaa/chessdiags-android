@@ -3,13 +3,18 @@ package donnees;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Comparator;
 
+import android.preference.PreferenceManager;
+import android.util.Log;
+
+import com.estragon.chessdiags2.Appli;
 import com.estragon.sql.DAO;
 
 import core.Problem;
+import donnees.comparateurs.Trieur;
+import donnees.comparateurs.TrieurParNbMoves;
 
-public class ListeProblemes extends ArrayList<Problem> implements Comparator<Problem> {
+public class ListeProblemes extends ArrayList<Problem> {
 	
 	static ListeProblemes LISTE;
 	
@@ -53,7 +58,7 @@ public class ListeProblemes extends ArrayList<Problem> implements Comparator<Pro
 	}
 	
 	public Problem getNextProblem(int source, int id,boolean sens) {
-		ListeProblemes liste = getProblemesFromSource(source);
+		ListeProblemes liste = getProblemesFromSource(source,id);
 		Problem previous = null;
 		for (Problem p : liste) {
 			if (p.getId() == id) {
@@ -73,27 +78,33 @@ public class ListeProblemes extends ArrayList<Problem> implements Comparator<Pro
 	}
 	
 	public static ListeProblemes getProblemesFromSource(int idSource) {
+		return getProblemesFromSource(idSource, -1);
+	}
+	
+	public static ListeProblemes getProblemesFromSource(int idSource,int idAForcer) {
+		boolean hideSolved = PreferenceManager.getDefaultSharedPreferences(Appli.getInstance()).getBoolean("hidesolved", false);
 		ListeProblemes liste = new ListeProblemes();
 		for (Problem problem : getListe()) {
 			if (problem.getSource() == idSource) {
-				liste.add(problem);
+				if (!(hideSolved && problem.isResolu()) || problem.getId() == idAForcer) 
+					liste.add(problem);
 			}
 		}
-		Collections.sort(liste,liste);
+		int trieur = Trieur.TRI_NBMOVES;
+		try {
+			trieur = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(Appli.getInstance()).getString("trieur", ""+Trieur.TRI_NBMOVES));
+		}
+		catch (NumberFormatException e) {
+			Log.e("Chessdiags","Erreur de parsing du trieur",e);
+		}
+		if (trieur == Trieur.TRI_NBMOVES) Collections.sort(liste,new TrieurParNbMoves());
 		return liste;
 	}
 	
-	@Override
-	public int compare(Problem lhs, Problem rhs) {
-		// TODO Auto-generated method stub
-		if (lhs.getNbMoves() < rhs.getNbMoves())
-			return -1;
-		if (lhs.getNbMoves() == rhs.getNbMoves())
-			return lhs.getNom().compareToIgnoreCase(rhs.getNom());
-		else return 1;
-	}
 	
 	public static void charger() {
 		LISTE = DAO.loadProblemes();
 	}
+	
+	
 }

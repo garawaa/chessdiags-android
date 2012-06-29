@@ -170,4 +170,7 @@ public class Problem {
 		if (nom == null) nom = "";
 	}
 	
+	public int getInternalId() {
+		return internalId;
+	}
 }

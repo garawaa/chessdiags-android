@@ -1,60 +1,163 @@
 package com.estragon.sql;
 
-import com.estragon.chessdiags2.Appli;
-import com.estragon.chessdiags2.R;
+import java.sql.SQLException;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.estragon.chessdiags2.Appli;
+import com.estragon.chessdiags2.R;
+import com.estragon.chessdiags2.TestActivity;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
+import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.table.TableUtils;
 
+import core.History;
+import core.Problem;
+import core.Source;
 
-public class DatabaseHelper extends SQLiteOpenHelper {  
-	private static final String DATABASE_NAME = "ChessDiags";   
-	private static final int DATABASE_VERSION = 16;  
-	static DatabaseHelper helper;
+public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
-	public synchronized static DatabaseHelper getHelper() {
-		if (helper == null) helper = new DatabaseHelper(Appli.getInstance());
-		return helper;
+	// name of the database file for your application -- change to something appropriate for your app
+	private static final String DATABASE_NAME = "chessdiags";
+	// any time you make changes to your database objects, you may have to increase the database version
+	private static final int DATABASE_VERSION = 27;
+
+	// the DAO object we use to access the SimpleData table
+	private Dao<SimpleData, Integer> simpleDao = null;
+	private Dao<Problem, Integer> problemDao = null;
+	private Dao<Source, Integer> sourceDao = null;
+	private Dao<History, Integer> historyDao = null;
+	private RuntimeExceptionDao<SimpleData, Integer> simpleRuntimeDao = null;
+	
+	static DatabaseHelper helper = null;
+
+	public DatabaseHelper(Context context) {
+		super(context, DATABASE_NAME, null, DATABASE_VERSION,R.raw.ormlite_config);
 	}
 
+	public static synchronized DatabaseHelper getHelper() {
+		if (helper == null) {
+			helper = OpenHelperManager.getHelper(Appli.getInstance(), DatabaseHelper.class);
+		}
+		return helper;
+	}
+	
+	/**
+	 * This is called when the database is first created. Usually you should call createTable statements here to create
+	 * the tables that will store your data.
+	 */
+	@Override
+	public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
+		try {
+			Log.i(DatabaseHelper.class.getName(), "onCreate");
+			TableUtils.createTableIfNotExists(connectionSource, Problem.class);
+			TableUtils.createTableIfNotExists(connectionSource, Source.class);
+			TableUtils.createTableIfNotExists(connectionSource, History.class);
+		} catch (SQLException e) {
+			Log.e(DatabaseHelper.class.getName(), "Can't create database", e);
+			throw new RuntimeException(e);
+		}
 
-	private DatabaseHelper(Context context) {  
-		super(context, DATABASE_NAME, null, DATABASE_VERSION);  
-	}  
+		try {
+			RuntimeExceptionDao<Source, Integer> sourceDao = getRuntimeExceptionDao(Source.class);
+			sourceDao.create(new Source(1,Appli.getInstance().getString(R.string.yourcreations),null,false));
+			sourceDao.create(new Source(2,Appli.getInstance().getString(R.string.beginnerrepo),"http://chessdiags.com/API/maj.php?id=1",false));
+			sourceDao.create(new Source(3,Appli.getInstance().getString(R.string.wtharvey),"http://chessdiags.com/API/maj.php?id=2",false));
+			sourceDao.create(new Source(4,Appli.getInstance().getString(R.string.publicrepo),"http://chessdiags.com/API/maj.php?id=3",true));
+		}
+		catch (Exception e) {
+			Log.e(DatabaseHelper.class.getName(), "Can't insert data", e);
+		}
+	}
 
+	/**
+	 * This is called when your application is upgraded and it has a higher version number. This allows you to adjust
+	 * the various data to match the new version number.
+	 */
+	@Override
+	public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource, int oldVersion, int newVersion) {
+		try {
+			Log.i(DatabaseHelper.class.getName(), "onUpgrade");
+			TableUtils.dropTable(connectionSource, SimpleData.class, true);
+			if (oldVersion < 23) {
+				TableUtils.dropTable(connectionSource, Problem.class, true);
+				TableUtils.dropTable(connectionSource, Source.class, true);
+			}
+			
+			// after we drop the old databases, we create the new ones
+			onCreate(db, connectionSource);
+		} catch (SQLException e) {
+			Log.e(DatabaseHelper.class.getName(), "Can't drop databases", e);
+			throw new RuntimeException(e);
+		}
+	}
 
-	@Override  
-	public void onCreate(SQLiteDatabase db) {  
-		if (1==1) return;
-		//Delete old tables
-		db.execSQL("DROP TABLE IF EXISTS diagrammes");
-		db.execSQL("DROP TABLE IF EXISTS sources");
+	/**
+	 * Returns the Database Access Object (DAO) for our SimpleData class. It will create it or just give the cached
+	 * value.
+	 */
+	public Dao<SimpleData, Integer> getDao() throws SQLException {
+		if (simpleDao == null) {
+			simpleDao = getDao(SimpleData.class);
+		}
+		return simpleDao;
+	}
 
-		//Create sources table
-		db.execSQL("CREATE TABLE sources (id integer primary key autoincrement,name varchar(30), url varchar(50) unique, state integer DEFAULT 1, uploadSupported integer DEFAULT 1)");
-		//Add the custom problem source
-		db.execSQL("INSERT INTO sources (id,name,url) VALUES(1,'"+Appli.getInstance().getString(R.string.yourcreations)+"',NULL)"); 
-		//Add the 64 cases beginner source
-		db.execSQL("INSERT INTO sources (id,name,url,uploadSupported) VALUES(2,'"+Appli.getInstance().getString(R.string.beginnerrepo)+"','http://64cases.com/API/maj.php?id=1',0)");
-		//Add the 64 cases wtharvey
-		db.execSQL("INSERT INTO sources (id,name,url,uploadSupported) VALUES(3,'"+Appli.getInstance().getString(R.string.wtharvey)+"','http://64cases.com/API/maj.php?id=2',0)");
-		//Add the 64 cases source
-		db.execSQL("INSERT INTO sources (id,name,url) VALUES(4,'"+Appli.getInstance().getString(R.string.publicrepo)+"','http://64cases.com/API/maj.php?id=3')");
+	/**
+	 * Returns the Database Access Object (DAO) for our SimpleData class. It will create it or just give the cached
+	 * value.
+	 */
+	public Dao<Problem, Integer> getProblemDao() throws SQLException {
+		if (problemDao == null) {
+			problemDao = getDao(Problem.class);
+		}
+		return problemDao;
+	}
 
-		//Create diagrammes table
-		db.execSQL("CREATE TABLE diagrammes (secondid int,source int,position varchar(65),difficulte int,trouve int,nom text, description text, moves int DEFAULT 2, PRIMARY KEY (secondid,source))"); 
-	}  
+	/**
+	 * Returns the Database Access Object (DAO) for our SimpleData class. It will create it or just give the cached
+	 * value.
+	 */
+	public Dao<Source, Integer> getSourceDao() throws SQLException {
+		if (sourceDao == null) {
+			sourceDao = getDao(Source.class);
+		}
+		return sourceDao;
+	}
+	
+	/**
+	 * Returns the Database Access Object (DAO) for our SimpleData class. It will create it or just give the cached
+	 * value.
+	 */
+	public Dao<History, Integer> getHistoryDao() throws SQLException {
+		if (historyDao == null) {
+			historyDao = getDao(History.class);
+		}
+		return historyDao;
+	}
 
-	@Override  
-	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {  
-		Log.w("Content provider database",  
-				"Upgrading database from version " + oldVersion + " to "  
-						+ newVersion + ", which will destroy all old data");  
-		onCreate(db);  
+	/**
+	 * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our SimpleData class. It will
+	 * create it or just give the cached value. RuntimeExceptionDao only through RuntimeExceptions.
+	 */
+	public RuntimeExceptionDao<SimpleData, Integer> getSimpleDataDao() {
+		if (simpleRuntimeDao == null) {
+			simpleRuntimeDao = getRuntimeExceptionDao(SimpleData.class);
+		}
+		return simpleRuntimeDao;
+	}
 
-	}  
-
-}  
+	/**
+	 * Close the database connections and clear any cached DAOs.
+	 */
+	@Override
+	public void close() {
+		super.close();
+		simpleRuntimeDao = null;
+	}
+}

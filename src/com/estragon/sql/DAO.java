@@ -1,5 +1,7 @@
 package com.estragon.sql;
 
+import java.util.Date;
+
 import util.Utils;
 import android.util.Log;
 
@@ -7,6 +9,7 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.QueryBuilder;
 
+import core.History;
 import core.Problem;
 import core.Source;
 import donnees.ListeProblemes;
@@ -17,7 +20,7 @@ public class DAO {
 	public static ListeProblemes loadProblemes() {
 		try {
 			QueryBuilder<Problem, Integer> queryBuilder =
-					DatabaseHelper2.getHelper().getProblemDao().queryBuilder();
+					DatabaseHelper.getHelper().getProblemDao().queryBuilder();
 			queryBuilder.orderBy("source", true);
 			queryBuilder.orderBy("id", true);
 			return new ListeProblemes(queryBuilder.query());
@@ -52,7 +55,7 @@ public class DAO {
 	public static ListeSources loadSources() {
 		try {
 			QueryBuilder<Source, Integer> queryBuilder =
-					DatabaseHelper2.getHelper().getSourceDao().queryBuilder();
+					DatabaseHelper.getHelper().getSourceDao().queryBuilder();
 			queryBuilder.orderBy("id", true);
 			return new ListeSources(queryBuilder.query());
 		}
@@ -146,7 +149,7 @@ public class DAO {
 
 	public static Dao<Source,Integer> getSourceDao() {
 		try {
-			return DatabaseHelper2.getHelper().getSourceDao();
+			return DatabaseHelper.getHelper().getSourceDao();
 		}
 		catch (Exception e) {
 			return null;
@@ -155,10 +158,32 @@ public class DAO {
 
 	public static Dao<Problem,Integer> getProblemDao() {
 		try {
-			return DatabaseHelper2.getHelper().getProblemDao();
+			return DatabaseHelper.getHelper().getProblemDao();
 		}
 		catch (Exception e) {
 			return null;
+		}
+	}
+	
+	public static Dao<History,Integer> getHistoryDao() {
+		try {
+			return DatabaseHelper.getHelper().getHistoryDao();
+		}
+		catch (Exception e) {
+			return null;
+		}
+	}
+	
+	public static void addHistory(Problem problem) {
+		try {
+			History history = new History();
+			history.setProblemInternalId(problem.getInternalId());
+			history.setDate(new Date());
+			Dao<History,Integer> dao = DatabaseHelper.getHelper().getHistoryDao();
+			dao.createOrUpdate(history);
+		}
+		catch (Exception e) {
+			Log.e("Chessdiags", "", e);
 		}
 	}
 
