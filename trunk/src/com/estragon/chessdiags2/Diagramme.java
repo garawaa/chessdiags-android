@@ -64,12 +64,14 @@ public class Diagramme extends SherlockActivity implements PartieListener, Board
 			this.finish();
 			return;
 		}
-
+		
+		DAO.addHistory(problem);
+		
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setHomeButtonEnabled(true);
 		this.setContentView(R.layout.diagramme);
 
-
+		
 
 		board = (Board) this.findViewById(R.id.board);
 
